@@ -1,0 +1,213 @@
+{
+    "server": {
+        "port": 18080
+    },
+    "menu": [
+        {
+            "name": "Products",
+            "route": "products",
+            "default": true,
+            "tabs": [
+                {
+                    "name": "Prod Tab 0",
+                    "route": "prod-tab-0",
+                    "sections": [
+                        {
+                            "name": "Prod Section 0 0",
+                            "route": "prod-section-0-0"
+                        }, {
+                            "name": "Prod Section 1 0",
+                            "route": "prod-section-1-0"
+                        }, {
+                            "name": "Prod Section 2 0",
+                            "route": "prod-section-2-0"
+                        }
+                    ]
+                }, {
+                    "name": "Prod Tab 1",
+                    "route": "prod-tab-1",
+                    "sections": [
+                        {
+                            "name": "Prod Section 0 1",
+                            "route": "prod-section-0-1"
+                        }, {
+                            "name": "Prod Section 1 1",
+                            "route": "prod-section-1-1"
+                        }, {
+                            "name": "Prod Section 2 1",
+                            "route": "prod-section-2-1"
+                        }
+                    ]
+                }, {
+                    "name": "Prod Tab 2",
+                    "route": "prod-tab-2",
+                    "sections": [
+                        {
+                            "name": "Prod Section 0 2",
+                            "route": "prod-section-0-2"
+                        }, {
+                            "name": "Prod Section 1 2",
+                            "route": "prod-section-1-2"
+                        }, {
+                            "name": "Prod Section 2 2",
+                            "route": "prod-section-2-2"
+                        }
+                    ]
+                }
+            ]
+        }, {
+            "name": "Customers",
+            "route": "customers",
+            "tabs": [
+                {
+                    "name": "General",
+                    "route": "general",
+                    "sections": [
+                        {
+                            "name": "Customer Section 0 0",
+                            "route": "customer-section-0-0"
+                        }, {
+                            "name": "Customer Section 1 0",
+                            "route": "customer-section-1-0"
+                        }, {
+                            "name": "Customer Section 2 0",
+                            "route": "customer-section-2-0"
+                        }
+                    ]
+                }, {
+                    "name": "Address",
+                    "route": "adress",
+                    "sections": [
+                        {
+                            "name": "Customer Section 0 1",
+                            "route": "customer-section-0-1"
+                        }, {
+                            "name": "Customer Section 1 1",
+                            "route": "customer-section-1-1"
+                        }, {
+                            "name": "Customer Section 2 1",
+                            "route": "customer-section-2-1"
+                        }
+                    ]
+                }, {
+                    "name": "Order",
+                    "route": "order",
+                    "sections": [
+                        {
+                            "name": "Customer Section 0 2",
+                            "route": "customer-section-0-2"
+                        }, {
+                            "name": "Customer Section 1 2",
+                            "route": "customer-section-1-2"
+                        }, {
+                            "name": "Customer Section 2 2",
+                            "route": "customer-section-2-2"
+                        }
+                    ]
+                }
+            ]
+        }, {
+            "name": "Orders",
+            "route": "orders",
+            "tabs": [
+                {
+                    "name": "Order Tab 0",
+                    "route": "order-tab-0",
+                    "sections": [
+                        {
+                            "name": "Order Section 0 0",
+                            "route": "order-section-0-0"
+                        }, {
+                            "name": "Order Section 0 1",
+                            "route": "order-section-0-1"
+                        }, {
+                            "name": "Order Section 0 2",
+                            "route": "order-section-0-2"
+                        }
+                    ]
+                }, {
+                    "name": "Order Tab 1",
+                    "route": "order-tab-1",
+                    "sections": [
+                        {
+                            "name": "Order Section 1 0",
+                            "route": "order-section-1-0"
+                        }, {
+                            "name": "Order Section 1 1",
+                            "route": "order-section-1-1"
+                        }, {
+                            "name": "Order Section 1 2",
+                            "route": "order-section-1-2"
+                        }
+                    ]
+                }, {
+                    "name": "Order Tab 2",
+                    "route": "order-tab-2",
+                    "sections": [
+                        {
+                            "name": "Order Section 2 0",
+                            "route": "order-section-2-0"
+                        }, {
+                            "name": "Order Section 2 1",
+                            "route": "order-section-2-1"
+                        }, {
+                            "name": "Order Section 2 2",
+                            "route": "order-section-2-2"      
+                        }
+                    ]
+                }
+            ]
+        }, {
+            "name": "News",
+            "route": "news",
+            "tabs": [
+                {
+                    "name": "News Tab0",
+                    "route": "news-tab-0",
+                    "sections": [
+                        {
+                            "name": "News Section 0 0",
+                            "route": "news-section-0-0"
+                        }, {
+                            "name": "News Section 0 1",
+                            "route": "news-section-0-1"
+                        }, {
+                            "name": "News Section 0 2",
+                            "route": "news-section-0-2"
+                        }
+                    ]
+                }, {
+                    "name": "News Tab 1",
+                    "route": "news-tab-1",
+                    "sections": [
+                        {
+                            "name": "News Section 1 0",
+                            "route": "news-section-1-0"
+                        }, {
+                            "name": "News Section 1 1",
+                            "route": "news-section-1-1"
+                        }, {
+                            "name": "News Section 1 2",
+                            "route": "news-section-1-2"
+                        }
+                    ]
+                }, {
+                    "name": "News Tab 2",
+                    "route": "news-tab-2",
+                    "sections": [
+                        {
+                            "name": "News Section 2 0",
+                            "route": "news-section-2-0"
+                        }, {
+                            "name": "News Section 2 1",
+                            "route": "news-section-2-1"
+                        }, {
+                            "name": "News Section 2 2",
+                            "route": "news-section-2-2"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
