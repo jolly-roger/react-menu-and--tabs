@@ -12,28 +12,20 @@ export default class App extends Component {
     
     handleTabItemClick(event) {
         let ariaSelected = Boolean(event.target.getAttribute(this.ariaSelectedAttr));
-
+        let tabLinks = Array.from(document.querySelectorAll(`#${this.tabItemsId} .tabs-title a`));
+        
         if (ariaSelected) {
             return;
         } else {
-            $('#' + this.tabItemsId + ' .tabs-title a').removeAttr(this.ariaSelectedAttr);
-            $('#' + this.tabItemsId + ' .tabs-title').removeClass(this.isActiveClass);
+            let tabs = Array.from(document.querySelectorAll(`#${this.tabItemsId} .tabs-title`));
             
-            $(event.target).attr(this.ariaSelectedAttr, true).parent().addClass(this.isActiveClass);
+            tabLinks.forEach((el) => el.removeAttribute(this.ariaSelectedAttr));
+            tabs.forEach((el) => el.classList.remove(this.isActiveClass));
+            
+            event.target.setAttribute(this.ariaSelectedAttr, true);
+            event.target.parentNode.classList.add(this.isActiveClass);
         }
         
-        this.initFoundation();
-    }
-    
-    initFoundation() {
-        $('#' + this.tabItemsId).foundation();
-    }
-    
-    componentDidMount() {
-        this.initFoundation();
-    }
-    
-    componentDidUpdate() {
-        this.initFoundation();
+        tabLinks.forEach((el) => el.blur());
     }
 }

@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import {browserHistory} from 'react-router';
-import NavLink from './NavLink';
+import {browserHistory, Link} from 'react-router';
 import BaseTabs from './BaseTabs';
 
 
@@ -12,8 +11,8 @@ export default class MenuItem extends BaseTabs {
     }
     
     updateTabRoute (props) {
-        const {menuItemRoute, tabItemRoute} = props.params;
-        const tabItems = props.route.menuConfig.getTabItems(menuItemRoute);
+        let {menuItemRoute, tabItemRoute} = props.params;
+        let tabItems = props.route.menuConfig.getTabItems(menuItemRoute);
 
         if (!tabItemRoute) {
             browserHistory.replace('/' + menuItemRoute + '/' + tabItems[0].route);
@@ -30,9 +29,9 @@ export default class MenuItem extends BaseTabs {
     }
     
     render() {
-        const {menuItemRoute, tabItemRoute} = this.props.params;
-        const tabItems = this.props.route.menuConfig.getTabItems(menuItemRoute);
-        const binbedHandleTabItemClick = this.handleTabItemClick.bind(this);
+        let {menuItemRoute, tabItemRoute} = this.props.params;
+        let tabItems = this.props.route.menuConfig.getTabItems(menuItemRoute);
+        let binbedHandleTabItemClick = this.handleTabItemClick.bind(this);
         
         return (
             <div id={this.tabItemsId}>
@@ -51,7 +50,7 @@ export default class MenuItem extends BaseTabs {
 
                         return (
                             <li className={'tabs-title ' + isActive}>
-                                <NavLink to={route} {...props}>{val.name}</NavLink>
+                                <Link to={route} {...props}>{val.name}</Link>
                             </li>
                         );
                     })}

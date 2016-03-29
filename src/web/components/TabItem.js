@@ -14,9 +14,9 @@ export default class TabItem extends Component {
     }
     
     handleSectionItemClick(event) {
-        const isActive = Array.from(event.target.parentNode.classList)
+        let isActive = Array.from(event.target.parentNode.classList)
             .indexOf(this.isActiveClass) > -1;
-        const sectionId = event.target.getAttribute(this.routeAttr);
+        let sectionId = event.target.getAttribute(this.routeAttr);
 
         this.updateQuery(sectionId, !isActive);
     }
@@ -45,8 +45,8 @@ export default class TabItem extends Component {
     }
     
     componentWillReceiveProps(newProps) {
-        const query = newProps.location.query;
-        const collapse = query.collapse ? JSON.parse(query.collapse) : [];
+        let query = newProps.location.query;
+        let collapse = query.collapse ? JSON.parse(query.collapse) : [];
         
         if (collapse.length == 0) {
             $('#' + this.sectionAccordionId + ' .accordion')
@@ -55,20 +55,20 @@ export default class TabItem extends Component {
     }
     
     componentDidUpdate() {
-        const active = $('#' + this.sectionAccordionId + ' li.is-active .accordion-content');
-        const collapse = $('#' + this.sectionAccordionId + ' li:not(.is-active) .accordion-content');
-        const accordion = $('#' + this.sectionAccordionId + ' .accordion');
+        let active = $('#' + this.sectionAccordionId + ' li.is-active .accordion-content');
+        let collapse = $('#' + this.sectionAccordionId + ' li:not(.is-active) .accordion-content');
+        let accordion = $('#' + this.sectionAccordionId + ' .accordion');
         
         accordion.foundation('up', collapse, true);
         accordion.foundation('down', active, true);
     }
     
     render() {
-        const {menuItemRoute, tabItemRoute} = this.props.params;
-        const sectionItems = this.props.route.menuConfig.getSectionItems(menuItemRoute, tabItemRoute);
-        const binbedHandleSectionItemClick = this.handleSectionItemClick.bind(this);
-        const query = this.props.location.query;
-        const collapse = query.collapse ? JSON.parse(query.collapse) : [];
+        let {menuItemRoute, tabItemRoute} = this.props.params;
+        let sectionItems = this.props.route.menuConfig.getSectionItems(menuItemRoute, tabItemRoute);
+        let binbedHandleSectionItemClick = this.handleSectionItemClick.bind(this);
+        let query = this.props.location.query;
+        let collapse = query.collapse ? JSON.parse(query.collapse) : [];
         
         return (
             <div id={this.sectionAccordionId}>

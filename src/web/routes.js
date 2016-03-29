@@ -5,8 +5,8 @@ import TabItem from './components/TabItem';
 
 
 export function getRoutes (menuConfig) {
-    const defaultMenuItem = menuConfig.getMenuItems()[0];
-    const defaultRoute = '/' + defaultMenuItem.route + '/' +
+    let defaultMenuItem = menuConfig.getMenuItems()[0];
+    let defaultRoute = '/' + defaultMenuItem.route + '/' +
         menuConfig.getTabItems(defaultMenuItem.route)[0].route;
 
     return {
