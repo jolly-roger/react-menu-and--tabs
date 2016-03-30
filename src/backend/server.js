@@ -8,7 +8,7 @@ const config = require('config');
 
 const serverConfig = config.get('server');
 const menuConfig = config.get('menu');
-const pathToWeb = path.join(__dirname, '../../build/web');
+const pathToWeb = path.join(__dirname, '../../dist');
 const indexFile = path.join(pathToWeb, 'index.html');
 
 

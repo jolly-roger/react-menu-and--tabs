@@ -1,17 +1,13 @@
 import React from 'react';
 import {render} from 'react-dom';
-import {Router, browserHistory, hashHistory} from 'react-router';
-import {getRoutes} from './routes';
-import MenuConfig from './MenuConfig';
+import Navigator from './components/Navigator';
 
 
 fetch('/menu-config')
 .then((data) => data.json())
 .then((menuConfig) => {
-    let routes = getRoutes(new MenuConfig(menuConfig));
-    
     render(
-      <Router routes={routes} history={browserHistory}/>,
+      <Navigator menuConfig={menuConfig} />,
       document.getElementById('app')
     )
 })

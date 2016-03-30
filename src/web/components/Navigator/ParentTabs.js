@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import { Link } from 'react-router'
+import {Link} from 'react-router'
 import BaseTabs from './BaseTabs';
 
 
-export default class App extends BaseTabs {
+export default class ParentTabs extends BaseTabs {
     constructor () {
         super();
         

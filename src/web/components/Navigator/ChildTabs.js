@@ -3,7 +3,7 @@ import {browserHistory, Link} from 'react-router';
 import BaseTabs from './BaseTabs';
 
 
-export default class MenuItem extends BaseTabs {
+export default class ChildTabs extends BaseTabs {
     constructor () {
         super();
         
