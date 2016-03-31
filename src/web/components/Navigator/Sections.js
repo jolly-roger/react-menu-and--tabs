@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {browserHistory} from 'react-router';
+import loremIpsum from 'lorem-ipsum-react-native';
 
 
 export default class Sections extends Component {
@@ -42,7 +43,7 @@ export default class Sections extends Component {
         browserHistory.push(this.props.location.pathname + '?collapse=' + JSON.stringify(collapse));
     }
     
-    getSectionsView(sections, parentTabRoute, childTabRoute, collapse) {
+    getSectionsView(sections, collapse) {
         return sections.map((val, i) => {
             let isActive = this.isActiveClass;
             
@@ -55,7 +56,9 @@ export default class Sections extends Component {
                     <a href="#" className="accordion-title"
                         data-route={val.route}>{val.name}</a>
                     <div className="accordion-content" data-tab-content>
-                        {parentTabRoute} / {childTabRoute} / {val.route}
+                        {loremIpsum({
+                            units: 'paragraphs'
+                        })}
                     </div>
                 </li>
             );
@@ -95,7 +98,7 @@ export default class Sections extends Component {
             <div id={this.sectionAccordionId}>
                 <ul className="accordion" data-accordion data-multi-expand="true"
                     data-allow-all-closed="true" onClick={this.binbedHandleSectionClick}>
-                    {this.getSectionsView(sections, parentTabRoute, childTabRoute, collapse)}
+                    {this.getSectionsView(sections, collapse)}
                 </ul>
             </div>
         )

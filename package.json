@@ -19,6 +19,7 @@
     "gulp-browserify": "^0.5.1",
     "gulp-clean": "^0.3.2",
     "jquery": "^2.2.2",
+    "lorem-ipsum-react-native": "^1.0.3",
     "path": "^0.12.7",
     "react": "^0.14.7",
     "react-dom": "^0.14.7",
