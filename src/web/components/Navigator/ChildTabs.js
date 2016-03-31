@@ -7,18 +7,40 @@ export default class ChildTabs extends BaseTabs {
     constructor () {
         super();
         
-        this.tabItemsId = 'tabItems';
+        this.tabsContainerId = 'childTabsContainer';
+        
+        this.binbedHandleTabClick = this.handleTabClick.bind(this);
     }
     
     updateTabRoute (props) {
-        let {menuItemRoute, tabItemRoute} = props.params;
-        let tabItems = props.route.menuConfig.getTabItems(menuItemRoute);
+        let {parentTabRoute, childTabRoute} = props.params;
+        let tabItems = props.route.navigationConfig.getChildTabs(parentTabRoute);
 
-        if (!tabItemRoute) {
-            browserHistory.replace('/' + menuItemRoute + '/' + tabItems[0].route);
+        if (!childTabRoute) {
+            browserHistory.replace('/' + parentTabRoute + '/' + tabItems[0].route);
         }
     }
     
+    getTabsView(tabs, parentTabRoute, childTabRoute) {
+        return tabs.map((val, i) => {
+            let props = {};
+            let route = '/' + parentTabRoute + '/' + val.route;
+            let isActive = this.isActiveClass;
+
+            if ((childTabRoute && val.route == childTabRoute) ||
+                (!childTabRoute && i == 0)) {
+                props[this.ariaSelectedAttr] = true;
+            } else {
+                isActive = '';
+            }
+
+            return (
+                <li className={'tabs-title ' + isActive}>
+                    <Link to={route} {...props}>{val.name}</Link>
+                </li>
+            );
+        });
+    }
     
     componentWillMount() {
         this.updateTabRoute(this.props);
@@ -29,31 +51,13 @@ export default class ChildTabs extends BaseTabs {
     }
     
     render() {
-        let {menuItemRoute, tabItemRoute} = this.props.params;
-        let tabItems = this.props.route.menuConfig.getTabItems(menuItemRoute);
-        let binbedHandleTabItemClick = this.handleTabItemClick.bind(this);
+        let {parentTabRoute, childTabRoute} = this.props.params;
+        let tabs = this.props.route.navigationConfig.getChildTabs(parentTabRoute);
         
         return (
-            <div id={this.tabItemsId}>
-                <ul className="tabs" onClick={binbedHandleTabItemClick}>
-                    {tabItems.map((val, i) => {
-                        let props = {};
-                        let route = '/' + menuItemRoute + '/' + val.route;
-                        let isActive = this.isActiveClass;
-
-                        if ((tabItemRoute && val.route == tabItemRoute) ||
-                            (!tabItemRoute && i == 0)) {
-                            props[this.ariaSelectedAttr] = true;
-                        } else {
-                            isActive = '';
-                        }
-
-                        return (
-                            <li className={'tabs-title ' + isActive}>
-                                <Link to={route} {...props}>{val.name}</Link>
-                            </li>
-                        );
-                    })}
+            <div id={this.tabsContainerId}>
+                <ul className="tabs" onClick={this.binbedHandleTabClick}>
+                    {this.getTabsView(tabs, parentTabRoute, childTabRoute)}
                 </ul>
                 <div className="tabs-content">
                     <div className="tabs-panel is-active">

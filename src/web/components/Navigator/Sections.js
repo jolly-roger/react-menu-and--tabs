@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {browserHistory} from 'react-router';
 
 
-export default class TabItem extends Component {
+export default class Sections extends Component {
     constructor () {
         super();
         
@@ -11,9 +11,11 @@ export default class TabItem extends Component {
         this.ariaSelectedAttr = 'aria-selected';
         this.isActiveClass = 'is-active'
         this.sectionAccordionId = 'sectionAccordion';
+        
+        this.binbedHandleSectionClick = this.handleSectionClick.bind(this);
     }
     
-    handleSectionItemClick(event) {
+    handleSectionClick(event) {
         let isActive = Array.from(event.target.parentNode.classList)
             .indexOf(this.isActiveClass) > -1;
         let sectionId = event.target.getAttribute(this.routeAttr);
@@ -40,6 +42,26 @@ export default class TabItem extends Component {
         browserHistory.push(this.props.location.pathname + '?collapse=' + JSON.stringify(collapse));
     }
     
+    getSectionsView(sections, parentTabRoute, childTabRoute, collapse) {
+        return sections.map((val, i) => {
+            let isActive = this.isActiveClass;
+            
+            if (collapse.indexOf(val.route) > -1) {
+                isActive = '';
+            }
+
+            return (
+                <li className={'accordion-item ' + isActive} data-accordion-item>
+                    <a href="#" className="accordion-title"
+                        data-route={val.route}>{val.name}</a>
+                    <div className="accordion-content" data-tab-content>
+                        {parentTabRoute} / {childTabRoute} / {val.route}
+                    </div>
+                </li>
+            );
+        });
+    }
+    
     componentDidMount() {
         $('#' + this.sectionAccordionId).foundation();
     }
@@ -64,33 +86,16 @@ export default class TabItem extends Component {
     }
     
     render() {
-        let {menuItemRoute, tabItemRoute} = this.props.params;
-        let sectionItems = this.props.route.menuConfig.getSectionItems(menuItemRoute, tabItemRoute);
-        let binbedHandleSectionItemClick = this.handleSectionItemClick.bind(this);
+        let {parentTabRoute, childTabRoute} = this.props.params;
+        let sections = this.props.route.navigationConfig.getSections(parentTabRoute, childTabRoute);
         let query = this.props.location.query;
         let collapse = query.collapse ? JSON.parse(query.collapse) : [];
         
         return (
             <div id={this.sectionAccordionId}>
                 <ul className="accordion" data-accordion data-multi-expand="true"
-                    data-allow-all-closed="true" onClick={binbedHandleSectionItemClick}>
-                    {sectionItems.map((val, i) => {
-                        let isActive = this.isActiveClass;
-                        
-                        if (collapse.indexOf(val.route) > -1) {
-                            isActive = '';
-                        }
-
-                        return (
-                            <li className={'accordion-item ' + isActive} data-accordion-item>
-                                <a href="#" className="accordion-title"
-                                    data-route={val.route}>{val.name}</a>
-                                <div className="accordion-content" data-tab-content>
-                                    {menuItemRoute} / {tabItemRoute} / {val.route}
-                                </div>
-                            </li>
-                        );
-                    })}
+                    data-allow-all-closed="true" onClick={this.binbedHandleSectionClick}>
+                    {this.getSectionsView(sections, parentTabRoute, childTabRoute, collapse)}
                 </ul>
             </div>
         )

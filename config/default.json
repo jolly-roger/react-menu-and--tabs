@@ -2,7 +2,7 @@
     "server": {
         "port": 18080
     },
-    "menu": [
+    "navigation": [
         {
             "name": "Products",
             "route": "products",

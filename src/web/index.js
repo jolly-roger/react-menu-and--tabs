@@ -1,14 +1,7 @@
 import React from 'react';
 import {render} from 'react-dom';
-import Navigator from './components/Navigator';
+
+import App from './components';
 
 
-fetch('/menu-config')
-.then((data) => data.json())
-.then((menuConfig) => {
-    render(
-      <Navigator menuConfig={menuConfig} />,
-      document.getElementById('app')
-    )
-})
-.catch((err) => console.log(err));
+render(<App/>, document.getElementById('app'));

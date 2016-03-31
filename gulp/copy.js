@@ -7,7 +7,7 @@ gulp.task('html', () => {
 });
 
 gulp.task('jquery', () => {
-    return gulp.src('node_modules/jquery/dist/*')
+    return gulp.src('node_modules/jquery/dist/jquery.min.js')
         .pipe(gulp.dest('dist'));
 });
 

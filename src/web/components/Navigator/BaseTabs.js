@@ -5,12 +5,12 @@ export default class App extends Component {
     constructor () {
         super();
         
-        this.tabItemsId = 'menuItems';
+        this.tabsContainerId = 'tabsContainer';
         this.ariaSelectedAttr = 'aria-selected';
         this.isActiveClass = 'is-active';
     }
     
-    handleTabItemClick(event) {
+    handleTabClick(event) {
         let ariaSelected = Boolean(event.target.getAttribute(this.ariaSelectedAttr));
         let tabLinks = Array.from(document.querySelectorAll(`#${this.tabItemsId} .tabs-title a`));
         

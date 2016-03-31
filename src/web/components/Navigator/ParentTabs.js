@@ -4,34 +4,37 @@ import BaseTabs from './BaseTabs';
 
 
 export default class ParentTabs extends BaseTabs {
-    constructor () {
+    constructor() {
         super();
         
-        this.tabItemsId = 'menuItems';
+        this.binbedHandleTabClick = this.handleTabClick.bind(this);
+    }
+    
+    getTabsView(tabs, parentTabRoute) {
+        return tabs.map((val, i) => {
+            let props = {};
+            
+            if (parentTabRoute && val.route == parentTabRoute) {
+                props[this.ariaSelectedAttr] = true;
+            }
+            
+            return (
+                <li className="tabs-title">
+                    <Link to={"/" + val.route} {...props} >{val.name}</Link>
+                </li>
+            );
+        });
     }
     
     render() {
-        let {menuItemRoute} = this.props.params;
-        let menuItems = this.props.route.menuConfig.getMenuItems();
-        let binbedHandleTabItemClick = this.handleTabItemClick.bind(this);
-
+        let {parentTabRoute} = this.props.params;
+        let tabs = this.props.route.navigationConfig.getParentTabs();
+        
         return (
             <div className="row collapse">
-                <div id={this.tabItemsId} className="small-3 columns">
-                    <ul className="tabs vertical" onClick={binbedHandleTabItemClick}>
-                        {menuItems.map((val, i) => {
-                            let props = {};
-                            
-                            if (menuItemRoute && val.route == menuItemRoute) {
-                                props[this.ariaSelectedAttr] = true;
-                            }
-                            
-                            return (
-                                <li className="tabs-title">
-                                    <Link to={"/" + val.route} {...props} >{val.name}</Link>
-                                </li>
-                            );
-                        })}
+                <div id={this.tabsContainerId} className="small-3 columns">
+                    <ul className="tabs vertical" onClick={this.binbedHandleTabClick}>
+                        {this.getTabsView(tabs, parentTabRoute)}
                     </ul>
                 </div>
                 <div className="columns">
