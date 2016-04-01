@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {browserHistory} from 'react-router';
-import loremIpsum from 'lorem-ipsum-react-native';
 
 
 export default class Sections extends Component {
@@ -43,7 +42,7 @@ export default class Sections extends Component {
         browserHistory.push(this.props.location.pathname + '?collapse=' + JSON.stringify(collapse));
     }
     
-    getSectionsView(sections, collapse) {
+    getSectionsView(sections, collapse, parentTabRoute, childTabRoute, sectionDataProvider) {
         return sections.map((val, i) => {
             let isActive = this.isActiveClass;
             
@@ -56,8 +55,10 @@ export default class Sections extends Component {
                     <a href="#" className="accordion-title"
                         data-route={val.route}>{val.name}</a>
                     <div className="accordion-content" data-tab-content>
-                        {loremIpsum({
-                            units: 'paragraphs'
+                        {sectionDataProvider({
+                            parentTabRoute: parentTabRoute,
+                            childTabRoute: childTabRoute,
+                            section: val.route
                         })}
                     </div>
                 </li>
@@ -91,6 +92,7 @@ export default class Sections extends Component {
     render() {
         let {parentTabRoute, childTabRoute} = this.props.params;
         let sections = this.props.route.navigationConfig.getSections(parentTabRoute, childTabRoute);
+        let sectionDataProvider = this.props.route.navigationConfig.getSectionDataProvider();
         let query = this.props.location.query;
         let collapse = query.collapse ? JSON.parse(query.collapse) : [];
         
@@ -98,7 +100,8 @@ export default class Sections extends Component {
             <div id={this.sectionAccordionId}>
                 <ul className="accordion" data-accordion data-multi-expand="true"
                     data-allow-all-closed="true" onClick={this.binbedHandleSectionClick}>
-                    {this.getSectionsView(sections, collapse)}
+                    {this.getSectionsView(sections, collapse, parentTabRoute, childTabRoute,
+                        sectionDataProvider)}
                 </ul>
             </div>
         )

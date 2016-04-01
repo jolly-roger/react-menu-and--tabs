@@ -11,6 +11,10 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _loremIpsumReactNative = require('lorem-ipsum-react-native');
+
+var _loremIpsumReactNative2 = _interopRequireDefault(_loremIpsumReactNative);
+
 var _Navigator = require('./Navigator');
 
 var _Navigator2 = _interopRequireDefault(_Navigator);
@@ -56,7 +60,20 @@ var App = function (_Component) {
         key: 'render',
         value: function render() {
             if (this.state.navigationConfig) {
-                return _react2.default.createElement(_Navigator2.default, { navigationConfig: this.state.navigationConfig });
+                return _react2.default.createElement(_Navigator2.default, { navigationConfig: this.state.navigationConfig,
+                    sectionDataProvider: function sectionDataProvider(params) {
+                        var fullRoute = params.parentTabRoute + '/' + params.childTabRoute + '/' + params.section;
+
+                        return _react2.default.createElement(
+                            'div',
+                            null,
+                            fullRoute,
+                            _react2.default.createElement('br', null),
+                            (0, _loremIpsumReactNative2.default)({
+                                units: 'paragraphs'
+                            })
+                        );
+                    } });
             } else {
                 return false;
             }
@@ -67,7 +84,7 @@ var App = function (_Component) {
 }(_react.Component);
 
 exports.default = App;
-},{"./Navigator":8,"react":225}],2:[function(require,module,exports){
+},{"./Navigator":8,"lorem-ipsum-react-native":59,"react":225}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -275,13 +292,19 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NavigationConfig = function () {
-    function NavigationConfig(navigationConfig) {
+    function NavigationConfig(navigationConfig, sectionDataProvider) {
         _classCallCheck(this, NavigationConfig);
 
         this.navigationConfig = navigationConfig;
+        this.sectionDataProvider = sectionDataProvider;
     }
 
     _createClass(NavigationConfig, [{
+        key: "getSectionDataProvider",
+        value: function getSectionDataProvider() {
+            return this.sectionDataProvider;
+        }
+    }, {
         key: "getParentTabs",
         value: function getParentTabs() {
             return this.navigationConfig;
@@ -412,9 +435,11 @@ var Navigator = function (_Component) {
     }, {
         key: 'render',
         value: function render() {
-            var navigationConfig = this.props.navigationConfig;
+            var _props = this.props;
+            var navigationConfig = _props.navigationConfig;
+            var sectionDataProvider = _props.sectionDataProvider;
 
-            var routes = this.getRoutes(new _NavigationConfig2.default(navigationConfig));
+            var routes = this.getRoutes(new _NavigationConfig2.default(navigationConfig, sectionDataProvider));
 
             return _react2.default.createElement(_reactRouter.Router, { routes: routes, history: _reactRouter.browserHistory });
         }
@@ -543,10 +568,6 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouter = require('react-router');
 
-var _loremIpsumReactNative = require('lorem-ipsum-react-native');
-
-var _loremIpsumReactNative2 = _interopRequireDefault(_loremIpsumReactNative);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -603,7 +624,7 @@ var Sections = function (_Component) {
         }
     }, {
         key: 'getSectionsView',
-        value: function getSectionsView(sections, collapse) {
+        value: function getSectionsView(sections, collapse, parentTabRoute, childTabRoute, sectionDataProvider) {
             var _this2 = this;
 
             return sections.map(function (val, i) {
@@ -625,8 +646,10 @@ var Sections = function (_Component) {
                     _react2.default.createElement(
                         'div',
                         { className: 'accordion-content', 'data-tab-content': true },
-                        (0, _loremIpsumReactNative2.default)({
-                            units: 'paragraphs'
+                        sectionDataProvider({
+                            parentTabRoute: parentTabRoute,
+                            childTabRoute: childTabRoute,
+                            section: val.route
                         })
                     )
                 );
@@ -665,6 +688,7 @@ var Sections = function (_Component) {
             var childTabRoute = _props$params.childTabRoute;
 
             var sections = this.props.route.navigationConfig.getSections(parentTabRoute, childTabRoute);
+            var sectionDataProvider = this.props.route.navigationConfig.getSectionDataProvider();
             var query = this.props.location.query;
             var collapse = query.collapse ? JSON.parse(query.collapse) : [];
 
@@ -675,7 +699,7 @@ var Sections = function (_Component) {
                     'ul',
                     { className: 'accordion', 'data-accordion': true, 'data-multi-expand': 'true',
                         'data-allow-all-closed': 'true', onClick: this.binbedHandleSectionClick },
-                    this.getSectionsView(sections, collapse)
+                    this.getSectionsView(sections, collapse, parentTabRoute, childTabRoute, sectionDataProvider)
                 )
             );
         }
@@ -685,7 +709,7 @@ var Sections = function (_Component) {
 }(_react.Component);
 
 exports.default = Sections;
-},{"lorem-ipsum-react-native":59,"react":225,"react-router":90}],8:[function(require,module,exports){
+},{"react":225,"react-router":90}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

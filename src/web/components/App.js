@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import loremIpsum from 'lorem-ipsum-react-native';
 
 import Navigator from './Navigator';
 
@@ -26,7 +27,20 @@ export default class App extends Component {
     render() {
         if (this.state.navigationConfig) {
             return (
-                <Navigator navigationConfig={this.state.navigationConfig} />
+                <Navigator navigationConfig={this.state.navigationConfig}
+                    sectionDataProvider={(params) => {
+                            let fullRoute = `${params.parentTabRoute}/${params.childTabRoute}/${params.section}`;
+                            
+                            return (
+                                <div>
+                                    {fullRoute}
+                                    <br />
+                                    {loremIpsum({
+                                        units: 'paragraphs'
+                                    })}
+                                </div>
+                            );
+                        }} />
             );
         } else {
             return false;
