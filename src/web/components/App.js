@@ -27,20 +27,27 @@ export default class App extends Component {
     render() {
         if (this.state.navigationConfig) {
             return (
-                <Navigator navigationConfig={this.state.navigationConfig}
-                    sectionDataProvider={(params) => {
-                            let fullRoute = `${params.parentTabRoute}/${params.childTabRoute}/${params.section}`;
-                            
-                            return (
-                                <div>
-                                    {fullRoute}
-                                    <br />
-                                    {loremIpsum({
-                                        units: 'paragraphs'
-                                    })}
-                                </div>
-                            );
-                        }} />
+                <div>
+                    <div className="top-bar row">
+                        <div className="top-bar-title">
+                            <strong>React-menubar-and-tabs Example</strong>
+                        </div>
+                    </div>
+                    <Navigator navigationConfig={this.state.navigationConfig}
+                        sectionDataProvider={(params) => {
+                                let fullRoute = `${params.parentTabRoute}/${params.childTabRoute}/${params.section}`;
+                                
+                                return (
+                                    <div>
+                                        {fullRoute}
+                                        <br />
+                                        {loremIpsum({
+                                            units: 'paragraphs'
+                                        })}
+                                    </div>
+                                );
+                            }} />
+                </div>
             );
         } else {
             return false;

@@ -60,20 +60,37 @@ var App = function (_Component) {
         key: 'render',
         value: function render() {
             if (this.state.navigationConfig) {
-                return _react2.default.createElement(_Navigator2.default, { navigationConfig: this.state.navigationConfig,
-                    sectionDataProvider: function sectionDataProvider(params) {
-                        var fullRoute = params.parentTabRoute + '/' + params.childTabRoute + '/' + params.section;
-
-                        return _react2.default.createElement(
+                return _react2.default.createElement(
+                    'div',
+                    null,
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'top-bar row' },
+                        _react2.default.createElement(
                             'div',
-                            null,
-                            fullRoute,
-                            _react2.default.createElement('br', null),
-                            (0, _loremIpsumReactNative2.default)({
-                                units: 'paragraphs'
-                            })
-                        );
-                    } });
+                            { className: 'top-bar-title' },
+                            _react2.default.createElement(
+                                'strong',
+                                null,
+                                'React-menubar-and-tabs Example'
+                            )
+                        )
+                    ),
+                    _react2.default.createElement(_Navigator2.default, { navigationConfig: this.state.navigationConfig,
+                        sectionDataProvider: function sectionDataProvider(params) {
+                            var fullRoute = params.parentTabRoute + '/' + params.childTabRoute + '/' + params.section;
+
+                            return _react2.default.createElement(
+                                'div',
+                                null,
+                                fullRoute,
+                                _react2.default.createElement('br', null),
+                                (0, _loremIpsumReactNative2.default)({
+                                    units: 'paragraphs'
+                                })
+                            );
+                        } })
+                );
             } else {
                 return false;
             }
@@ -125,7 +142,7 @@ var App = function (_Component) {
             var _this2 = this;
 
             var ariaSelected = Boolean(event.target.getAttribute(this.ariaSelectedAttr));
-            var tabLinks = Array.from(document.querySelectorAll('#' + this.tabItemsId + ' .tabs-title a'));
+            var tabLinks = Array.from(document.querySelectorAll('#' + this.tabsContainerId + ' .tabs-title a'));
 
             if (ariaSelected) {
                 return;
@@ -522,10 +539,10 @@ var ParentTabs = function (_BaseTabs) {
 
             return _react2.default.createElement(
                 'div',
-                { className: 'row collapse' },
+                { className: 'row collapse navigator' },
                 _react2.default.createElement(
                     'div',
-                    { id: this.tabsContainerId, className: 'small-3 columns' },
+                    { id: this.tabsContainerId, className: 'small-3 columns parent-tabs' },
                     _react2.default.createElement(
                         'ul',
                         { className: 'tabs vertical', onClick: this.binbedHandleTabClick },
@@ -537,12 +554,8 @@ var ParentTabs = function (_BaseTabs) {
                     { className: 'columns' },
                     _react2.default.createElement(
                         'div',
-                        { className: 'tabs-content vertical' },
-                        _react2.default.createElement(
-                            'div',
-                            { className: 'tabs-panel is-active' },
-                            this.props.children
-                        )
+                        { className: 'tabs-panel is-active parent-tabs-panel' },
+                        this.props.children
                     )
                 )
             );

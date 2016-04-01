@@ -12,7 +12,7 @@ export default class App extends Component {
     
     handleTabClick(event) {
         let ariaSelected = Boolean(event.target.getAttribute(this.ariaSelectedAttr));
-        let tabLinks = Array.from(document.querySelectorAll(`#${this.tabItemsId} .tabs-title a`));
+        let tabLinks = Array.from(document.querySelectorAll(`#${this.tabsContainerId} .tabs-title a`));
         
         if (ariaSelected) {
             return;
@@ -25,7 +25,7 @@ export default class App extends Component {
             event.target.setAttribute(this.ariaSelectedAttr, true);
             event.target.parentNode.classList.add(this.isActiveClass);
         }
-        
+
         tabLinks.forEach((el) => el.blur());
     }
 }

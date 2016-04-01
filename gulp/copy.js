@@ -16,4 +16,4 @@ gulp.task('copy-build', ['browserify'], () => {
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('copy', ['copy-build', 'html', 'jquery', 'foundation']);
+gulp.task('copy', ['copy-build', 'html', 'jquery', 'foundation', 'sass']);

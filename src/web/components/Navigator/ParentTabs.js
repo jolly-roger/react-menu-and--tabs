@@ -31,17 +31,15 @@ export default class ParentTabs extends BaseTabs {
         let tabs = this.props.route.navigationConfig.getParentTabs();
         
         return (
-            <div className="row collapse">
-                <div id={this.tabsContainerId} className="small-3 columns">
+            <div className="row collapse navigator">
+                <div id={this.tabsContainerId} className="small-3 columns parent-tabs">
                     <ul className="tabs vertical" onClick={this.binbedHandleTabClick}>
                         {this.getTabsView(tabs, parentTabRoute)}
                     </ul>
                 </div>
                 <div className="columns">
-                    <div className="tabs-content vertical">
-                        <div className="tabs-panel is-active">
-                            {this.props.children}
-                        </div>
+                    <div className="tabs-panel is-active parent-tabs-panel">
+                        {this.props.children}
                     </div>
                 </div>
             </div>
