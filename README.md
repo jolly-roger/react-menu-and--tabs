@@ -13,7 +13,4 @@ npm start
 After this you can open application in browser through http://localhost:18080
 
 ## Configuration ##
-In order to configure application you need to edit ./config/default.json file, there are only two sections "server" and "menu", first one for server configuration, second one for hierarchy configuration
-
-## Known issues ##
-There is one noticeable issue, which I have no time to overcome, it is tabs glitching on going back
+In order to configure application you need to edit ./config/default.json file, there are only two sections "server" and "navigation", first one for server configuration, second one for hierarchy configuration
