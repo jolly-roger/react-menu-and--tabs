@@ -49,8 +49,8 @@ export default class Navigator extends Component {
     };
     
     render() {
-        let {navigationConfig, sectionDataProvider} = this.props;
-        let routes = this.getRoutes(new NavigationConfig(navigationConfig, sectionDataProvider));
+        let {navigationConfig} = this.props;
+        let routes = this.getRoutes(new NavigationConfig(navigationConfig));
         
         return (
             <Router routes={routes} history={browserHistory} />

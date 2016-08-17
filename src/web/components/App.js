@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import loremIpsum from 'lorem-ipsum-react-native';
 
 import Navigator from './Navigator';
 
@@ -33,20 +32,7 @@ export default class App extends Component {
                             <strong>React-menubar-and-tabs Example</strong>
                         </div>
                     </div>
-                    <Navigator navigationConfig={this.state.navigationConfig}
-                        sectionDataProvider={(params) => {
-                                let fullRoute = `${params.parentTabRoute}/${params.childTabRoute}/${params.section}`;
-                                
-                                return (
-                                    <div>
-                                        {fullRoute}
-                                        <br />
-                                        {loremIpsum({
-                                            units: 'paragraphs'
-                                        })}
-                                    </div>
-                                );
-                            }} />
+                    <Navigator navigationConfig={this.state.navigationConfig} />
                 </div>
             );
         } else {

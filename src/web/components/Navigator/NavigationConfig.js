@@ -1,11 +1,6 @@
 export default class NavigationConfig {
-    constructor(navigationConfig, sectionDataProvider){
+    constructor(navigationConfig){
         this.navigationConfig = navigationConfig;
-        this.sectionDataProvider = sectionDataProvider;
-    }
-    
-    getSectionDataProvider(){
-        return this.sectionDataProvider;
     }
     
     getParentTabs() {
