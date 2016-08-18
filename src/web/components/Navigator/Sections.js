@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 import {browserHistory} from 'react-router';
 
-import {loadSection, openSection} from './actions';
-import store from './store';
+import SectionText from './SectionText';
 
 
 export default class Sections extends Component {
@@ -16,20 +15,9 @@ export default class Sections extends Component {
         this.sectionAccordionId = 'sectionAccordion';
         
         this.binbedHandleSectionClick = this.handleSectionClick.bind(this);
-        this.bindedUpdateText = this.updateText.bind(this);
-        
-        store.subscribe(this.bindedUpdateText);
-        
-        store.dispatch(loadSection(props.parentTabRoute, props.childTabRoute, ''));
-        
-        this.state = {
-            text: store.getState()
-        };
     }
     
     handleSectionClick(event) {
-        store.dispatch({type: 'OPEN_SECTION'});
-        
         let isActive = Array.from(event.target.parentNode.classList)
             .indexOf(this.isActiveClass) > -1;
         let sectionId = event.target.getAttribute(this.routeAttr);
@@ -56,16 +44,9 @@ export default class Sections extends Component {
         browserHistory.push(this.props.location.pathname + '?collapse=' + JSON.stringify(collapse));
     }
     
-    updateText() {
-        this.setState({
-            text: store.getState()
-        });
-    }
-    
     getSectionsView(sections, collapse, parentTabRoute, childTabRoute) {
         return sections.map((val, i) => {
             let isActive = this.isActiveClass;
-            let fullRoute = `${parentTabRoute}/${childTabRoute}/${val.route}`;
             
             if (collapse.indexOf(val.route) > -1) {
                 isActive = '';
@@ -76,11 +57,7 @@ export default class Sections extends Component {
                     <a href="#" className="accordion-title"
                         data-route={val.route}>{val.name}</a>
                     <div className="accordion-content" data-tab-content>
-                        <div>
-                            {fullRoute}
-                            <br />
-                            {this.state.text}
-                        </div>
+                        <SectionText parentRoute={parentTabRoute} childRoute={childTabRoute} section={val.route} />
                     </div>
                 </li>
             );
