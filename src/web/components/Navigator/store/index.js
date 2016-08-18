@@ -1,2 +1,2 @@
 export {loadSection, loadNavigation} from './actions';
-export {store, findSection, getSections, getParentTabs, getChildTabs} from './navigation';
+export {store, findSection, getSections, getParentTabs, getChildTabs} from './filters';

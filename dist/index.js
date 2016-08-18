@@ -276,7 +276,7 @@ var ChildTabs = function (_BaseTabs) {
 }(_BaseTabs3.default);
 
 exports.default = ChildTabs;
-},{"./BaseTabs":2,"./store":10,"react":235,"react-router":98}],4:[function(require,module,exports){
+},{"./BaseTabs":2,"./store":11,"react":235,"react-router":98}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -375,7 +375,7 @@ var Navigator = function (_Component) {
 }(_react.Component);
 
 exports.default = Navigator;
-},{"./ChildTabs":3,"./ParentTabs":5,"./Sections":7,"./store":10,"react":235,"react-router":98}],5:[function(require,module,exports){
+},{"./ChildTabs":3,"./ParentTabs":5,"./Sections":7,"./store":11,"react":235,"react-router":98}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -477,7 +477,7 @@ var ParentTabs = function (_BaseTabs) {
 }(_BaseTabs3.default);
 
 exports.default = ParentTabs;
-},{"./BaseTabs":2,"./store":10,"react":235,"react-router":98}],6:[function(require,module,exports){
+},{"./BaseTabs":2,"./store":11,"react":235,"react-router":98}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -553,7 +553,7 @@ var SectionText = function (_Component) {
 }(_react.Component);
 
 exports.default = SectionText;
-},{"./store":10,"react":235}],7:[function(require,module,exports){
+},{"./store":11,"react":235}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -710,7 +710,7 @@ var Sections = function (_Component) {
 }(_react.Component);
 
 exports.default = Sections;
-},{"./SectionText":6,"./store":10,"react":235,"react-router":98}],8:[function(require,module,exports){
+},{"./SectionText":6,"./store":11,"react":235,"react-router":98}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -740,7 +740,7 @@ var _Navigator2 = _interopRequireDefault(_Navigator);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = _Navigator2.default;
-},{"./Navigator":4,"./store":10}],9:[function(require,module,exports){
+},{"./Navigator":4,"./store":11}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -770,60 +770,6 @@ function loadSection(parentRoute, childRoute, sectionRoute) {
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _actions = require('./actions');
-
-Object.defineProperty(exports, 'loadSection', {
-  enumerable: true,
-  get: function get() {
-    return _actions.loadSection;
-  }
-});
-Object.defineProperty(exports, 'loadNavigation', {
-  enumerable: true,
-  get: function get() {
-    return _actions.loadNavigation;
-  }
-});
-
-var _navigation = require('./navigation');
-
-Object.defineProperty(exports, 'store', {
-  enumerable: true,
-  get: function get() {
-    return _navigation.store;
-  }
-});
-Object.defineProperty(exports, 'findSection', {
-  enumerable: true,
-  get: function get() {
-    return _navigation.findSection;
-  }
-});
-Object.defineProperty(exports, 'getSections', {
-  enumerable: true,
-  get: function get() {
-    return _navigation.getSections;
-  }
-});
-Object.defineProperty(exports, 'getParentTabs', {
-  enumerable: true,
-  get: function get() {
-    return _navigation.getParentTabs;
-  }
-});
-Object.defineProperty(exports, 'getChildTabs', {
-  enumerable: true,
-  get: function get() {
-    return _navigation.getChildTabs;
-  }
-});
-},{"./actions":9,"./navigation":11}],11:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.store = undefined;
@@ -843,9 +789,6 @@ var _reducers2 = _interopRequireDefault(_reducers);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var store = (0, _redux.createStore)(_reducers2.default);
-
-exports.store = store;
-
 
 function getStateArray() {
     var state = store.getState();
@@ -886,7 +829,63 @@ function findSection(parentTabRoute, childTabRoute, sectionRoute) {
         return section.route === sectionRoute;
     });
 }
-},{"./reducers":12,"redux":241}],12:[function(require,module,exports){
+
+exports.store = store;
+},{"./reducers":12,"redux":241}],11:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _actions = require('./actions');
+
+Object.defineProperty(exports, 'loadSection', {
+  enumerable: true,
+  get: function get() {
+    return _actions.loadSection;
+  }
+});
+Object.defineProperty(exports, 'loadNavigation', {
+  enumerable: true,
+  get: function get() {
+    return _actions.loadNavigation;
+  }
+});
+
+var _filters = require('./filters');
+
+Object.defineProperty(exports, 'store', {
+  enumerable: true,
+  get: function get() {
+    return _filters.store;
+  }
+});
+Object.defineProperty(exports, 'findSection', {
+  enumerable: true,
+  get: function get() {
+    return _filters.findSection;
+  }
+});
+Object.defineProperty(exports, 'getSections', {
+  enumerable: true,
+  get: function get() {
+    return _filters.getSections;
+  }
+});
+Object.defineProperty(exports, 'getParentTabs', {
+  enumerable: true,
+  get: function get() {
+    return _filters.getParentTabs;
+  }
+});
+Object.defineProperty(exports, 'getChildTabs', {
+  enumerable: true,
+  get: function get() {
+    return _filters.getChildTabs;
+  }
+});
+},{"./actions":9,"./filters":10}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -898,7 +897,7 @@ var _loremIpsumReactNative = require('lorem-ipsum-react-native');
 
 var _loremIpsumReactNative2 = _interopRequireDefault(_loremIpsumReactNative);
 
-var _navigation = require('./navigation');
+var _filters = require('./filters');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -908,7 +907,7 @@ function navigator(state, action) {
             return action.navigation;
         case 'LOAD_SECTION':
             var newState = Object.assign({}, state);
-            var section = (0, _navigation.findSection)(action.parentRoute, action.childRoute, action.sectionRoute);
+            var section = (0, _filters.findSection)(action.parentRoute, action.childRoute, action.sectionRoute);
 
             !section.text && (section.text = (0, _loremIpsumReactNative2.default)({
                 units: 'paragraphs'
@@ -919,7 +918,7 @@ function navigator(state, action) {
             return state;
     }
 }
-},{"./navigation":11,"lorem-ipsum-react-native":65}],13:[function(require,module,exports){
+},{"./filters":10,"lorem-ipsum-react-native":65}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

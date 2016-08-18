@@ -5,8 +5,6 @@ import reducers from './reducers';
 
 const store = createStore(reducers);
 
-export {store};
-
 
 function getStateArray() {
     let state = store.getState();
@@ -40,3 +38,5 @@ export function findSection(parentTabRoute, childTabRoute, sectionRoute) {
     return getSections(parentTabRoute, childTabRoute)
         .find((section) => section.route === sectionRoute);
 }
+
+export {store};

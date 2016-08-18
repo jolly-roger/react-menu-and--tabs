@@ -1,6 +1,6 @@
 import loremIpsum from 'lorem-ipsum-react-native';
 
-import {findSection} from './navigation';
+import {findSection} from './filters';
 
 
 export default function navigator (state, action) {
