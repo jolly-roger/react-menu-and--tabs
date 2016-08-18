@@ -78,7 +78,7 @@ var App = function (_Component) {
 }(_react.Component);
 
 exports.default = App;
-},{"./Navigator":9,"react":235}],2:[function(require,module,exports){
+},{"./Navigator":8,"react":235}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -168,6 +168,8 @@ var _BaseTabs2 = require('./BaseTabs');
 
 var _BaseTabs3 = _interopRequireDefault(_BaseTabs2);
 
+var _store = require('./store');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -197,7 +199,7 @@ var ChildTabs = function (_BaseTabs) {
             var parentTabRoute = _props$params.parentTabRoute;
             var childTabRoute = _props$params.childTabRoute;
 
-            var tabItems = props.route.navigationConfig.getChildTabs(parentTabRoute);
+            var tabItems = (0, _store.getChildTabs)(parentTabRoute);
 
             if (!childTabRoute) {
                 _reactRouter.browserHistory.replace('/' + parentTabRoute + '/' + tabItems[0].route);
@@ -247,7 +249,7 @@ var ChildTabs = function (_BaseTabs) {
             var parentTabRoute = _props$params2.parentTabRoute;
             var childTabRoute = _props$params2.childTabRoute;
 
-            var tabs = this.props.route.navigationConfig.getChildTabs(parentTabRoute);
+            var tabs = (0, _store.getChildTabs)(parentTabRoute);
 
             return _react2.default.createElement(
                 'div',
@@ -274,62 +276,7 @@ var ChildTabs = function (_BaseTabs) {
 }(_BaseTabs3.default);
 
 exports.default = ChildTabs;
-},{"./BaseTabs":2,"react":235,"react-router":98}],4:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var NavigationConfig = function () {
-    function NavigationConfig(navigationConfig) {
-        _classCallCheck(this, NavigationConfig);
-
-        this.navigationConfig = navigationConfig;
-    }
-
-    _createClass(NavigationConfig, [{
-        key: "getParentTabs",
-        value: function getParentTabs() {
-            return this.navigationConfig;
-        }
-    }, {
-        key: "getChildTabs",
-        value: function getChildTabs(parentTabRoute) {
-            return this.findParentTab(parentTabRoute).tabs;
-        }
-    }, {
-        key: "getSections",
-        value: function getSections(parentTabRoute, childTabRoute) {
-            return this.findChildTab(parentTabRoute, childTabRoute).sections;
-        }
-    }, {
-        key: "findParentTab",
-        value: function findParentTab(parentTabRoute) {
-            return this.navigationConfig.find(function (tab) {
-                return tab.route === parentTabRoute;
-            });
-        }
-    }, {
-        key: "findChildTab",
-        value: function findChildTab(parentTabRoute, childTabRoute) {
-            var parentTab = this.findParentTab(parentTabRoute);
-
-            return parentTab.tabs.find(function (tab) {
-                return tab.route === childTabRoute;
-            });
-        }
-    }]);
-
-    return NavigationConfig;
-}();
-
-exports.default = NavigationConfig;
-},{}],5:[function(require,module,exports){
+},{"./BaseTabs":2,"./store":10,"react":235,"react-router":98}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -345,12 +292,6 @@ var _react2 = _interopRequireDefault(_react);
 var _reactRouter = require('react-router');
 
 var _store = require('./store');
-
-var _store2 = _interopRequireDefault(_store);
-
-var _NavigationConfig = require('./NavigationConfig');
-
-var _NavigationConfig2 = _interopRequireDefault(_NavigationConfig);
 
 var _ParentTabs = require('./ParentTabs');
 
@@ -383,29 +324,26 @@ var Navigator = function (_Component) {
 
     _createClass(Navigator, [{
         key: 'getRoutes',
-        value: function getRoutes(navigationConfig) {
-            var parentTabs = navigationConfig.getParentTabs();
+        value: function getRoutes() {
+            var parentTabs = (0, _store.getParentTabs)();
             var defaultParentTab = parentTabs.length > 0 ? parentTabs[0] : null;
 
             var routes = {
                 path: '/',
                 component: _ParentTabs2.default,
-                navigationConfig: navigationConfig,
                 childRoutes: [{
                     path: '/:parentTabRoute',
                     component: _ChildTabs2.default,
-                    navigationConfig: navigationConfig,
                     childRoutes: [{
                         path: '/:parentTabRoute/:childTabRoute',
-                        component: _Sections2.default,
-                        navigationConfig: navigationConfig
+                        component: _Sections2.default
                     }]
                 }]
             };
 
             if (defaultParentTab) {
                 (function () {
-                    var childTabs = navigationConfig.getChildTabs(defaultParentTab.route);
+                    var childTabs = (0, _store.getChildTabs)(defaultParentTab.route);
                     var defaultRoute = void 0;
 
                     if (childTabs.length > 0) {
@@ -427,7 +365,7 @@ var Navigator = function (_Component) {
     }, {
         key: 'render',
         value: function render() {
-            var routes = this.getRoutes(new _NavigationConfig2.default(_store2.default.getState()));
+            var routes = this.getRoutes();
 
             return _react2.default.createElement(_reactRouter.Router, { routes: routes, history: _reactRouter.browserHistory });
         }
@@ -437,7 +375,7 @@ var Navigator = function (_Component) {
 }(_react.Component);
 
 exports.default = Navigator;
-},{"./ChildTabs":3,"./NavigationConfig":4,"./ParentTabs":6,"./Sections":8,"./store":11,"react":235,"react-router":98}],6:[function(require,module,exports){
+},{"./ChildTabs":3,"./ParentTabs":5,"./Sections":7,"./store":10,"react":235,"react-router":98}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -457,6 +395,8 @@ var _reactRouter = require('react-router');
 var _BaseTabs2 = require('./BaseTabs');
 
 var _BaseTabs3 = _interopRequireDefault(_BaseTabs2);
+
+var _store = require('./store');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -506,7 +446,7 @@ var ParentTabs = function (_BaseTabs) {
         value: function render() {
             var parentTabRoute = this.props.params.parentTabRoute;
 
-            var tabs = this.props.route.navigationConfig.getParentTabs();
+            var tabs = (0, _store.getParentTabs)();
 
             return _react2.default.createElement(
                 'div',
@@ -537,7 +477,7 @@ var ParentTabs = function (_BaseTabs) {
 }(_BaseTabs3.default);
 
 exports.default = ParentTabs;
-},{"./BaseTabs":2,"react":235,"react-router":98}],7:[function(require,module,exports){
+},{"./BaseTabs":2,"./store":10,"react":235,"react-router":98}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -551,8 +491,6 @@ var _react = require('react');
 var _react2 = _interopRequireDefault(_react);
 
 var _store = require('./store');
-
-var _store2 = _interopRequireDefault(_store);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -572,33 +510,34 @@ var SectionText = function (_Component) {
 
         _this.parentRoute = props.parentRoute;
         _this.childRoute = props.childRoute;
-        _this.section = props.section;
+        _this.sectionRoute = props.sectionRoute;
 
-        _this.bindedUpdateText = _this.updateText.bind(_this);
-
-        _store2.default.subscribe(_this.bindedUpdateText);
-
-        _store2.default.dispatch((0, _store.loadSection)(_this.parentRoute, _this.childRoute, _this.section));
-
-        _this.state = _store2.default.getState();
+        _store.store.subscribe(function () {
+            _this.setState((0, _store.findSection)(_this.parentRoute, _this.childRoute, _this.sectionRoute));
+        });
         return _this;
     }
 
     _createClass(SectionText, [{
-        key: 'updateText',
-        value: function updateText() {
-            var state = _store2.default.getState();
+        key: 'componentWillMount',
+        value: function componentWillMount() {
+            _store.store.dispatch((0, _store.loadSection)(this.parentRoute, this.childRoute, this.sectionRoute));
+        }
+    }, {
+        key: 'componentWillReceiveProps',
+        value: function componentWillReceiveProps(newProps) {
+            if (this.parentRoute !== newProps.parentRoute || this.childRoute !== newProps.childRoute || this.sectionRoute !== newProps.sectionRoute) {
+                this.parentRoute = newProps.parentRoute;
+                this.childRoute = newProps.childRoute;
+                this.sectionRoute = newProps.sectionRoute;
 
-            if (this.parentRoute === state.parentRoute && this.childRoute === _store2.default.childRoute && this.section === state.section) {
-                this.setState(state);
+                _store.store.dispatch((0, _store.loadSection)(newProps.parentRoute, newProps.childRoute, newProps.sectionRoute));
             }
         }
     }, {
         key: 'render',
         value: function render() {
-            var fullRoute = this.parentRoute + '/' + this.childRoute + '/' + this.section;
-
-            console.log(1000, JSON.stringify(_store2.default), _store2.default.getState());
+            var fullRoute = this.parentRoute + '/' + this.childRoute + '/' + this.sectionRoute;
 
             return _react2.default.createElement(
                 'div',
@@ -614,7 +553,7 @@ var SectionText = function (_Component) {
 }(_react.Component);
 
 exports.default = SectionText;
-},{"./store":11,"react":235}],8:[function(require,module,exports){
+},{"./store":10,"react":235}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -632,6 +571,8 @@ var _reactRouter = require('react-router');
 var _SectionText = require('./SectionText');
 
 var _SectionText2 = _interopRequireDefault(_SectionText);
+
+var _store = require('./store');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -711,7 +652,7 @@ var Sections = function (_Component) {
                     _react2.default.createElement(
                         'div',
                         { className: 'accordion-content', 'data-tab-content': true },
-                        _react2.default.createElement(_SectionText2.default, { parentRoute: parentTabRoute, childRoute: childTabRoute, section: val.route })
+                        _react2.default.createElement(_SectionText2.default, { parentRoute: parentTabRoute, childRoute: childTabRoute, sectionRoute: val.route })
                     )
                 );
             });
@@ -748,7 +689,7 @@ var Sections = function (_Component) {
             var parentTabRoute = _props$params.parentTabRoute;
             var childTabRoute = _props$params.childTabRoute;
 
-            var sections = this.props.route.navigationConfig.getSections(parentTabRoute, childTabRoute);
+            var sections = (0, _store.getSections)(parentTabRoute, childTabRoute);
             var query = this.props.location.query;
             var collapse = query.collapse ? JSON.parse(query.collapse) : [];
 
@@ -769,7 +710,7 @@ var Sections = function (_Component) {
 }(_react.Component);
 
 exports.default = Sections;
-},{"./SectionText":7,"react":235,"react-router":98}],9:[function(require,module,exports){
+},{"./SectionText":6,"./store":10,"react":235,"react-router":98}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -799,7 +740,7 @@ var _Navigator2 = _interopRequireDefault(_Navigator);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = _Navigator2.default;
-},{"./Navigator":5,"./store":11}],10:[function(require,module,exports){
+},{"./Navigator":4,"./store":10}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -807,9 +748,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.loadNavigation = loadNavigation;
 exports.loadSection = loadSection;
-exports.openSection = openSection;
 var LOAD_SECTION = exports.LOAD_SECTION = 'LOAD_SECTION';
-var OPEN_SECTION = exports.OPEN_SECTION = 'OPEN_SECTION';
 var LOAD_NAVIGATION = exports.LOAD_NAVIGATION = 'LOAD_NAVIGATION';
 
 function loadNavigation(navigation) {
@@ -819,30 +758,20 @@ function loadNavigation(navigation) {
     };
 }
 
-function loadSection(parentRoute, childRoute, section) {
+function loadSection(parentRoute, childRoute, sectionRoute) {
     return {
         type: LOAD_SECTION,
         parentRoute: parentRoute,
         childRoute: childRoute,
-        section: section
+        sectionRoute: sectionRoute
     };
 }
-
-function openSection(parentRoute, childRoute, section) {
-    return {
-        type: LOAD_SECTION,
-        parentRoute: parentRoute,
-        childRoute: childRoute,
-        section: section
-    };
-}
-},{}],11:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.loadNavigation = exports.openSection = exports.loadSection = exports.store = undefined;
 
 var _actions = require('./actions');
 
@@ -852,18 +781,58 @@ Object.defineProperty(exports, 'loadSection', {
     return _actions.loadSection;
   }
 });
-Object.defineProperty(exports, 'openSection', {
-  enumerable: true,
-  get: function get() {
-    return _actions.openSection;
-  }
-});
 Object.defineProperty(exports, 'loadNavigation', {
   enumerable: true,
   get: function get() {
     return _actions.loadNavigation;
   }
 });
+
+var _navigation = require('./navigation');
+
+Object.defineProperty(exports, 'store', {
+  enumerable: true,
+  get: function get() {
+    return _navigation.store;
+  }
+});
+Object.defineProperty(exports, 'findSection', {
+  enumerable: true,
+  get: function get() {
+    return _navigation.findSection;
+  }
+});
+Object.defineProperty(exports, 'getSections', {
+  enumerable: true,
+  get: function get() {
+    return _navigation.getSections;
+  }
+});
+Object.defineProperty(exports, 'getParentTabs', {
+  enumerable: true,
+  get: function get() {
+    return _navigation.getParentTabs;
+  }
+});
+Object.defineProperty(exports, 'getChildTabs', {
+  enumerable: true,
+  get: function get() {
+    return _navigation.getChildTabs;
+  }
+});
+},{"./actions":9,"./navigation":11}],11:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.store = undefined;
+exports.getParentTabs = getParentTabs;
+exports.getChildTabs = getChildTabs;
+exports.getSections = getSections;
+exports.findParentTab = findParentTab;
+exports.findChildTab = findChildTab;
+exports.findSection = findSection;
 
 var _redux = require('redux');
 
@@ -875,9 +844,49 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var store = (0, _redux.createStore)(_reducers2.default);
 
-exports.default = store;
 exports.store = store;
-},{"./actions":10,"./reducers":12,"redux":241}],12:[function(require,module,exports){
+
+
+function getStateArray() {
+    var state = store.getState();
+
+    return Object.keys(state).map(function (key) {
+        return state[key];
+    });
+}
+
+function getParentTabs() {
+    return getStateArray();
+}
+
+function getChildTabs(parentTabRoute) {
+    return findParentTab(parentTabRoute).tabs;
+}
+
+function getSections(parentTabRoute, childTabRoute) {
+    return findChildTab(parentTabRoute, childTabRoute).sections;
+}
+
+function findParentTab(parentTabRoute) {
+    return getStateArray().find(function (tab) {
+        return tab.route === parentTabRoute;
+    });
+}
+
+function findChildTab(parentTabRoute, childTabRoute) {
+    var parentTab = findParentTab(parentTabRoute);
+
+    return parentTab.tabs.find(function (tab) {
+        return tab.route === childTabRoute;
+    });
+}
+
+function findSection(parentTabRoute, childTabRoute, sectionRoute) {
+    return getSections(parentTabRoute, childTabRoute).find(function (section) {
+        return section.route === sectionRoute;
+    });
+}
+},{"./reducers":12,"redux":241}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -889,6 +898,8 @@ var _loremIpsumReactNative = require('lorem-ipsum-react-native');
 
 var _loremIpsumReactNative2 = _interopRequireDefault(_loremIpsumReactNative);
 
+var _navigation = require('./navigation');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function navigator(state, action) {
@@ -896,32 +907,19 @@ function navigator(state, action) {
         case 'LOAD_NAVIGATION':
             return action.navigation;
         case 'LOAD_SECTION':
-            return {
-                parentRoute: action.parentRoute,
-                childRoute: action.childRoute,
-                section: action.section,
-                text: (0, _loremIpsumReactNative2.default)({
-                    units: 'paragraphs'
-                })
-            };
-        case 'OPEN_SECTION':
-            //return {
-            //    parentRoute: action.parentRoute,
-            //    childRoute: action.childRoute,
-            //    section: action.section,
-            //    testx: loremIpsum({
-            //        units: 'paragraphs'
-            //    })
-            //};
+            var newState = Object.assign({}, state);
+            var section = (0, _navigation.findSection)(action.parentRoute, action.childRoute, action.sectionRoute);
 
-            return (0, _loremIpsumReactNative2.default)({
+            !section.text && (section.text = (0, _loremIpsumReactNative2.default)({
                 units: 'paragraphs'
-            });
+            }));
+
+            return newState;
         default:
             return state;
     }
 }
-},{"lorem-ipsum-react-native":65}],13:[function(require,module,exports){
+},{"./navigation":11,"lorem-ipsum-react-native":65}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

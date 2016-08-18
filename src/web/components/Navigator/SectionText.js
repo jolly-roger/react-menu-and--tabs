@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import store, {loadSection, openSection} from './store';
+import {store, loadSection, findSection} from './store';
 
 
 export default class SectionText extends Component {
@@ -9,27 +9,29 @@ export default class SectionText extends Component {
         
         this.parentRoute = props.parentRoute;
         this.childRoute = props.childRoute;
-        this.section = props.section;
-        
-        this.bindedUpdateText = this.updateText.bind(this);
-        
-        store.subscribe(this.bindedUpdateText);
-        
-        store.dispatch(loadSection(this.parentRoute, this.childRoute, this.section));
-        
-        this.state = store.getState();
+        this.sectionRoute = props.sectionRoute;
+
+        store.subscribe(() => {
+            this.setState(findSection(this.parentRoute, this.childRoute, this.sectionRoute))
+        });
     }
     
-    updateText() {
-        let state = store.getState();
-        
-        if (this.parentRoute === state.parentRoute && this.childRoute === store.childRoute && this.section === state.section) {
-            this.setState(state);
+    componentWillMount() {
+        store.dispatch(loadSection(this.parentRoute, this.childRoute, this.sectionRoute));
+    }
+    
+    componentWillReceiveProps(newProps) {
+        if (this.parentRoute !== newProps.parentRoute || this.childRoute !== newProps.childRoute || this.sectionRoute !== newProps.sectionRoute) {
+            this.parentRoute = newProps.parentRoute;
+            this.childRoute = newProps.childRoute;
+            this.sectionRoute = newProps.sectionRoute;
+            
+            store.dispatch(loadSection(newProps.parentRoute, newProps.childRoute, newProps.sectionRoute));
         }
     }
     
     render() {
-        let fullRoute = `${this.parentRoute}/${this.childRoute}/${this.section}`;
+        let fullRoute = `${this.parentRoute}/${this.childRoute}/${this.sectionRoute}`;
         
         return (
             <div>

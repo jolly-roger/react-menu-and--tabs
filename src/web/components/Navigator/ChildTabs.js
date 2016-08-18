@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {browserHistory, Link} from 'react-router';
+
 import BaseTabs from './BaseTabs';
+import {getChildTabs} from './store';
 
 
 export default class ChildTabs extends BaseTabs {
@@ -14,7 +16,7 @@ export default class ChildTabs extends BaseTabs {
     
     updateTabRoute (props) {
         let {parentTabRoute, childTabRoute} = props.params;
-        let tabItems = props.route.navigationConfig.getChildTabs(parentTabRoute);
+        let tabItems = getChildTabs(parentTabRoute);
 
         if (!childTabRoute) {
             browserHistory.replace('/' + parentTabRoute + '/' + tabItems[0].route);
@@ -52,7 +54,7 @@ export default class ChildTabs extends BaseTabs {
     
     render() {
         let {parentTabRoute, childTabRoute} = this.props.params;
-        let tabs = this.props.route.navigationConfig.getChildTabs(parentTabRoute);
+        let tabs = getChildTabs(parentTabRoute);
         
         return (
             <div id={this.tabsContainerId}>

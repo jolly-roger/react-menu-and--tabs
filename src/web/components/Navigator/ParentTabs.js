@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router'
+
 import BaseTabs from './BaseTabs';
+import {getParentTabs} from './store';
 
 
 export default class ParentTabs extends BaseTabs {
@@ -28,7 +30,7 @@ export default class ParentTabs extends BaseTabs {
     
     render() {
         let {parentTabRoute} = this.props.params;
-        let tabs = this.props.route.navigationConfig.getParentTabs();
+        let tabs = getParentTabs();
         
         return (
             <div className="row collapse navigator">

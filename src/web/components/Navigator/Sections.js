@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {browserHistory} from 'react-router';
 
 import SectionText from './SectionText';
+import {getSections} from './store';
 
 
 export default class Sections extends Component {
@@ -57,7 +58,7 @@ export default class Sections extends Component {
                     <a href="#" className="accordion-title"
                         data-route={val.route}>{val.name}</a>
                     <div className="accordion-content" data-tab-content>
-                        <SectionText parentRoute={parentTabRoute} childRoute={childTabRoute} section={val.route} />
+                        <SectionText parentRoute={parentTabRoute} childRoute={childTabRoute} sectionRoute={val.route} />
                     </div>
                 </li>
             );
@@ -89,7 +90,7 @@ export default class Sections extends Component {
     
     render() {
         let {parentTabRoute, childTabRoute} = this.props.params;
-        let sections = this.props.route.navigationConfig.getSections(parentTabRoute, childTabRoute);
+        let sections = getSections(parentTabRoute, childTabRoute);
         let query = this.props.location.query;
         let collapse = query.collapse ? JSON.parse(query.collapse) : [];
         

@@ -1,38 +1,34 @@
 import React, {Component} from 'react';
 import {Router, browserHistory, hashHistory} from 'react-router';
 
-import store from './store';
-import NavigationConfig from './NavigationConfig';
+import {getParentTabs, getChildTabs} from './store';
 import ParentTabs from './ParentTabs';
 import ChildTabs from './ChildTabs';
 import Sections from './Sections';
 
 
 export default class Navigator extends Component {
-    getRoutes (navigationConfig) {
-        let parentTabs = navigationConfig.getParentTabs();
+    getRoutes () {
+        let parentTabs = getParentTabs();
         let defaultParentTab = (parentTabs.length > 0) ? parentTabs[0] : null;
         
         let routes = {
             path: '/',
             component: ParentTabs,
-            navigationConfig: navigationConfig,
             childRoutes: [
                 {
                     path: '/:parentTabRoute',
                     component: ChildTabs,
-                    navigationConfig: navigationConfig,
                     childRoutes: [{
                         path: '/:parentTabRoute/:childTabRoute',
-                        component: Sections,
-                        navigationConfig: navigationConfig
+                        component: Sections
                     }]
                 }
             ]
         };
         
         if (defaultParentTab) {
-            let childTabs = navigationConfig.getChildTabs(defaultParentTab.route);
+            let childTabs = getChildTabs(defaultParentTab.route);
             let defaultRoute;
             
             if (childTabs.length > 0) {
@@ -50,7 +46,7 @@ export default class Navigator extends Component {
     };
     
     render() {
-        let routes = this.getRoutes(new NavigationConfig(store.getState()));
+        let routes = this.getRoutes();
         
         return (
             <Router routes={routes} history={browserHistory} />
