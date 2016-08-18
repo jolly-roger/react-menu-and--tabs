@@ -6,3 +6,5 @@ import reducers from './reducers';
 const store = createStore(reducers);
 
 export default store;
+
+export {loadSection, openSection} from './actions';

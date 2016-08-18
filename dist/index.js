@@ -84,7 +84,7 @@ var App = function (_Component) {
 }(_react.Component);
 
 exports.default = App;
-},{"./Navigator":10,"react":235}],2:[function(require,module,exports){
+},{"./Navigator":9,"react":235}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -554,8 +554,6 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _actions = require('./actions');
-
 var _store = require('./store');
 
 var _store2 = _interopRequireDefault(_store);
@@ -584,7 +582,7 @@ var SectionText = function (_Component) {
 
         _store2.default.subscribe(_this.bindedUpdateText);
 
-        _store2.default.dispatch((0, _actions.loadSection)(_this.parentRoute, _this.childRoute, _this.section));
+        _store2.default.dispatch((0, _store.loadSection)(_this.parentRoute, _this.childRoute, _this.section));
 
         _this.state = _store2.default.getState();
         return _this;
@@ -604,6 +602,8 @@ var SectionText = function (_Component) {
         value: function render() {
             var fullRoute = this.parentRoute + '/' + this.childRoute + '/' + this.section;
 
+            console.log(1000, JSON.stringify(_store2.default), _store2.default.getState());
+
             return _react2.default.createElement(
                 'div',
                 null,
@@ -618,7 +618,7 @@ var SectionText = function (_Component) {
 }(_react.Component);
 
 exports.default = SectionText;
-},{"./actions":9,"./store":12,"react":235}],8:[function(require,module,exports){
+},{"./store":11,"react":235}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -777,6 +777,20 @@ exports.default = Sections;
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _Navigator = require('./Navigator');
+
+var _Navigator2 = _interopRequireDefault(_Navigator);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = _Navigator2.default;
+},{"./Navigator":5}],10:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.loadSection = loadSection;
@@ -801,21 +815,41 @@ function openSection(parentRoute, childRoute, section) {
         section: section
     };
 }
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.openSection = exports.loadSection = undefined;
 
-var _Navigator = require('./Navigator');
+var _actions = require('./actions');
 
-var _Navigator2 = _interopRequireDefault(_Navigator);
+Object.defineProperty(exports, 'loadSection', {
+  enumerable: true,
+  get: function get() {
+    return _actions.loadSection;
+  }
+});
+Object.defineProperty(exports, 'openSection', {
+  enumerable: true,
+  get: function get() {
+    return _actions.openSection;
+  }
+});
+
+var _redux = require('redux');
+
+var _reducers = require('./reducers');
+
+var _reducers2 = _interopRequireDefault(_reducers);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = _Navigator2.default;
-},{"./Navigator":5}],11:[function(require,module,exports){
+var store = (0, _redux.createStore)(_reducers2.default);
+
+exports.default = store;
+},{"./actions":10,"./reducers":12,"redux":241}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -862,25 +896,7 @@ function section(state, action) {
             return state;
     }
 }
-},{"lorem-ipsum-react-native":65}],12:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _redux = require('redux');
-
-var _reducers = require('./reducers');
-
-var _reducers2 = _interopRequireDefault(_reducers);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var store = (0, _redux.createStore)(_reducers2.default);
-
-exports.default = store;
-},{"./reducers":11,"redux":241}],13:[function(require,module,exports){
+},{"lorem-ipsum-react-native":65}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

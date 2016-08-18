@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 
-import {loadSection, openSection} from './actions';
-import store from './store';
+import store, {loadSection, openSection} from './store';
 
 
 export default class SectionText extends Component {
@@ -31,6 +30,8 @@ export default class SectionText extends Component {
     
     render() {
         let fullRoute = `${this.parentRoute}/${this.childRoute}/${this.section}`;
+        
+        console.log(1000, JSON.stringify(store), store.getState());
         
         return (
             <div>
