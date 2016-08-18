@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Router, browserHistory, hashHistory} from 'react-router';
 
+import store from './store';
 import NavigationConfig from './NavigationConfig';
 import ParentTabs from './ParentTabs';
 import ChildTabs from './ChildTabs';
@@ -49,8 +50,7 @@ export default class Navigator extends Component {
     };
     
     render() {
-        let {navigationConfig} = this.props;
-        let routes = this.getRoutes(new NavigationConfig(navigationConfig));
+        let routes = this.getRoutes(new NavigationConfig(store.getState()));
         
         return (
             <Router routes={routes} history={browserHistory} />

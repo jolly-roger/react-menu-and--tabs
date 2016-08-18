@@ -1,8 +1,10 @@
 import loremIpsum from 'lorem-ipsum-react-native';
 
 
-export default function section (state, action) {
+export default function navigator (state, action) {
     switch (action.type) {
+        case 'LOAD_NAVIGATION':
+            return action.navigation;
         case 'LOAD_SECTION':
             return {
                 parentRoute: action.parentRoute,
@@ -12,11 +14,6 @@ export default function section (state, action) {
                     units: 'paragraphs'
                 })
             };
-            
-            //return loremIpsum({
-            //    units: 'paragraphs'
-            //});
-        
         case 'OPEN_SECTION':
             //return {
             //    parentRoute: action.parentRoute,

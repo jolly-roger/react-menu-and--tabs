@@ -29,12 +29,7 @@ var App = function (_Component) {
     function App() {
         _classCallCheck(this, App);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(App).call(this));
-
-        _this.state = {
-            navigationConfig: null
-        };
-        return _this;
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(App).call(this));
     }
 
     _createClass(App, [{
@@ -45,9 +40,8 @@ var App = function (_Component) {
             this.serverRequest = fetch('/navigation-config').then(function (data) {
                 return data.json();
             }).then(function (navigationConfig) {
-                _this2.setState({
-                    navigationConfig: navigationConfig
-                });
+                _Navigator.store.dispatch((0, _Navigator.loadNavigation)(navigationConfig));
+                _this2.setState(navigationConfig);
             }).catch(function (err) {
                 return console.log(err);
             });
@@ -55,7 +49,7 @@ var App = function (_Component) {
     }, {
         key: 'render',
         value: function render() {
-            if (this.state.navigationConfig) {
+            if (_Navigator.store.getState()) {
                 return _react2.default.createElement(
                     'div',
                     null,
@@ -72,7 +66,7 @@ var App = function (_Component) {
                             )
                         )
                     ),
-                    _react2.default.createElement(_Navigator2.default, { navigationConfig: this.state.navigationConfig })
+                    _react2.default.createElement(_Navigator2.default, null)
                 );
             } else {
                 return false;
@@ -350,6 +344,10 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouter = require('react-router');
 
+var _store = require('./store');
+
+var _store2 = _interopRequireDefault(_store);
+
 var _NavigationConfig = require('./NavigationConfig');
 
 var _NavigationConfig2 = _interopRequireDefault(_NavigationConfig);
@@ -429,9 +427,7 @@ var Navigator = function (_Component) {
     }, {
         key: 'render',
         value: function render() {
-            var navigationConfig = this.props.navigationConfig;
-
-            var routes = this.getRoutes(new _NavigationConfig2.default(navigationConfig));
+            var routes = this.getRoutes(new _NavigationConfig2.default(_store2.default.getState()));
 
             return _react2.default.createElement(_reactRouter.Router, { routes: routes, history: _reactRouter.browserHistory });
         }
@@ -441,7 +437,7 @@ var Navigator = function (_Component) {
 }(_react.Component);
 
 exports.default = Navigator;
-},{"./ChildTabs":3,"./NavigationConfig":4,"./ParentTabs":6,"./Sections":8,"react":235,"react-router":98}],6:[function(require,module,exports){
+},{"./ChildTabs":3,"./NavigationConfig":4,"./ParentTabs":6,"./Sections":8,"./store":11,"react":235,"react-router":98}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -779,6 +775,22 @@ exports.default = Sections;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.loadNavigation = exports.store = undefined;
+
+var _store = require('./store');
+
+Object.defineProperty(exports, 'store', {
+  enumerable: true,
+  get: function get() {
+    return _store.store;
+  }
+});
+Object.defineProperty(exports, 'loadNavigation', {
+  enumerable: true,
+  get: function get() {
+    return _store.loadNavigation;
+  }
+});
 
 var _Navigator = require('./Navigator');
 
@@ -787,16 +799,25 @@ var _Navigator2 = _interopRequireDefault(_Navigator);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = _Navigator2.default;
-},{"./Navigator":5}],10:[function(require,module,exports){
+},{"./Navigator":5,"./store":11}],10:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.loadNavigation = loadNavigation;
 exports.loadSection = loadSection;
 exports.openSection = openSection;
 var LOAD_SECTION = exports.LOAD_SECTION = 'LOAD_SECTION';
 var OPEN_SECTION = exports.OPEN_SECTION = 'OPEN_SECTION';
+var LOAD_NAVIGATION = exports.LOAD_NAVIGATION = 'LOAD_NAVIGATION';
+
+function loadNavigation(navigation) {
+    return {
+        type: LOAD_NAVIGATION,
+        navigation: navigation
+    };
+}
 
 function loadSection(parentRoute, childRoute, section) {
     return {
@@ -821,7 +842,7 @@ function openSection(parentRoute, childRoute, section) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.openSection = exports.loadSection = undefined;
+exports.loadNavigation = exports.openSection = exports.loadSection = exports.store = undefined;
 
 var _actions = require('./actions');
 
@@ -837,6 +858,12 @@ Object.defineProperty(exports, 'openSection', {
     return _actions.openSection;
   }
 });
+Object.defineProperty(exports, 'loadNavigation', {
+  enumerable: true,
+  get: function get() {
+    return _actions.loadNavigation;
+  }
+});
 
 var _redux = require('redux');
 
@@ -849,13 +876,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var store = (0, _redux.createStore)(_reducers2.default);
 
 exports.default = store;
+exports.store = store;
 },{"./actions":10,"./reducers":12,"redux":241}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.default = section;
+exports.default = navigator;
 
 var _loremIpsumReactNative = require('lorem-ipsum-react-native');
 
@@ -863,8 +891,10 @@ var _loremIpsumReactNative2 = _interopRequireDefault(_loremIpsumReactNative);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function section(state, action) {
+function navigator(state, action) {
     switch (action.type) {
+        case 'LOAD_NAVIGATION':
+            return action.navigation;
         case 'LOAD_SECTION':
             return {
                 parentRoute: action.parentRoute,
@@ -874,11 +904,6 @@ function section(state, action) {
                     units: 'paragraphs'
                 })
             };
-
-        //return loremIpsum({
-        //    units: 'paragraphs'
-        //});
-
         case 'OPEN_SECTION':
             //return {
             //    parentRoute: action.parentRoute,

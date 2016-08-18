@@ -31,8 +31,6 @@ export default class SectionText extends Component {
     render() {
         let fullRoute = `${this.parentRoute}/${this.childRoute}/${this.section}`;
         
-        console.log(1000, JSON.stringify(store), store.getState());
-        
         return (
             <div>
                 {fullRoute}

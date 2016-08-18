@@ -1,30 +1,25 @@
 import React, {Component} from 'react';
 
-import Navigator from './Navigator';
+import Navigator, {store, loadNavigation} from './Navigator';
 
 
 export default class App extends Component {    
     constructor() {
         super();
-        
-        this.state = {
-            navigationConfig: null
-        };
     }
     
     componentDidMount() {
         this.serverRequest = fetch('/navigation-config')
             .then((data) => data.json())
             .then((navigationConfig) => {
-                this.setState({
-                    navigationConfig: navigationConfig
-                });
+                store.dispatch(loadNavigation(navigationConfig));
+                this.setState(navigationConfig);
             })
             .catch((err) => console.log(err));
     }
     
     render() {
-        if (this.state.navigationConfig) {
+        if (store.getState()) {
             return (
                 <div>
                     <div className="top-bar row">
@@ -32,7 +27,7 @@ export default class App extends Component {
                             <strong>React-menubar-and-tabs Example</strong>
                         </div>
                     </div>
-                    <Navigator navigationConfig={this.state.navigationConfig} />
+                    <Navigator />
                 </div>
             );
         } else {
