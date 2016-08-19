@@ -772,13 +772,7 @@ function loadSection(parentRoute, childRoute, sectionRoute) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.store = undefined;
-exports.getParentTabs = getParentTabs;
-exports.getChildTabs = getChildTabs;
-exports.getSections = getSections;
-exports.findParentTab = findParentTab;
-exports.findChildTab = findChildTab;
-exports.findSection = findSection;
+exports.findSection = exports.findChildTab = exports.findParentTab = exports.getSections = exports.getChildTabs = exports.getParentTabs = exports.store = undefined;
 
 var _redux = require('redux');
 
@@ -831,6 +825,12 @@ function findSection(parentTabRoute, childTabRoute, sectionRoute) {
 }
 
 exports.store = store;
+exports.getParentTabs = getParentTabs;
+exports.getChildTabs = getChildTabs;
+exports.getSections = getSections;
+exports.findParentTab = findParentTab;
+exports.findChildTab = findChildTab;
+exports.findSection = findSection;
 },{"./reducers":12,"redux":241}],11:[function(require,module,exports){
 'use strict';
 

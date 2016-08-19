@@ -12,31 +12,31 @@ function getStateArray() {
     return Object.keys(state).map( key => state[key]);
 }
 
-export function getParentTabs() {
+function getParentTabs() {
     return getStateArray();
 }
 
-export function getChildTabs(parentTabRoute) {
+function getChildTabs(parentTabRoute) {
     return findParentTab(parentTabRoute).tabs;
 }
 
-export function getSections(parentTabRoute, childTabRoute) {
+function getSections(parentTabRoute, childTabRoute) {
     return findChildTab(parentTabRoute, childTabRoute).sections;
 }
 
-export function findParentTab(parentTabRoute) {
+function findParentTab(parentTabRoute) {
     return getStateArray().find((tab) => tab.route === parentTabRoute);
 }
 
-export function findChildTab(parentTabRoute, childTabRoute) {
+function findChildTab(parentTabRoute, childTabRoute) {
     let parentTab = findParentTab(parentTabRoute);
     
     return parentTab.tabs.find((tab) => tab.route === childTabRoute);
 }
 
-export function findSection(parentTabRoute, childTabRoute, sectionRoute) {
+function findSection(parentTabRoute, childTabRoute, sectionRoute) {
     return getSections(parentTabRoute, childTabRoute)
         .find((section) => section.route === sectionRoute);
 }
 
-export {store};
+export {store, getParentTabs, getChildTabs, getSections, findParentTab, findChildTab, findSection};
