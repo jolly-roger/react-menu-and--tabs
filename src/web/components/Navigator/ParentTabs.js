@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
-import {Link} from 'react-router'
+import {Route, Link} from 'react-router-dom';
 
 import BaseTabs from './BaseTabs';
 import {getParentTabs} from './store';
+import ChildTabs from './ChildTabs';
 
 
 export default class ParentTabs extends BaseTabs {
@@ -29,9 +30,9 @@ export default class ParentTabs extends BaseTabs {
     }
     
     render() {
-        let {parentTabRoute} = this.props.params;
+        let {parentTabRoute, childTabRoute} = this.props.match.params;
         let tabs = getParentTabs();
-        
+
         return (
             <div className="row collapse navigator">
                 <div id={this.tabsContainerId} className="small-3 columns parent-tabs">
@@ -41,7 +42,8 @@ export default class ParentTabs extends BaseTabs {
                 </div>
                 <div className="columns">
                     <div className="tabs-panel is-active parent-tabs-panel">
-                        {this.props.children}
+                        {/*this.props.children*/}
+                        <ChildTabs parentTabRoute={parentTabRoute} childTabRoute={childTabRoute} location={this.props.location}/>
                     </div>
                 </div>
             </div>

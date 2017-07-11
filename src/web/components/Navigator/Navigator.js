@@ -1,5 +1,10 @@
 import React, {Component} from 'react';
-import {Router, browserHistory, hashHistory} from 'react-router';
+
+import {
+  BrowserRouter,
+  Route,
+  Link
+} from 'react-router-dom'
 
 import {getParentTabs, getChildTabs} from './store';
 import ParentTabs from './ParentTabs';
@@ -46,10 +51,13 @@ export default class Navigator extends Component {
     };
     
     render() {
-        let routes = this.getRoutes();
-        
         return (
-            <Router routes={routes} history={browserHistory} />
+            <BrowserRouter>
+                <div>
+                    <Route exact path={'/:parentTabRoute'} component={ParentTabs} />
+                    <Route path={'/:parentTabRoute/:childTabRoute'} component={ParentTabs} />
+                </div>
+            </BrowserRouter>
         );
     }
 }

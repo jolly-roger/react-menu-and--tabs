@@ -1,8 +1,13 @@
 import React, {Component} from 'react';
-import {browserHistory, Link} from 'react-router';
+import createHistory from 'history/createBrowserHistory';
+import {Link} from 'react-router-dom';
 
 import BaseTabs from './BaseTabs';
 import {getChildTabs} from './store';
+import Sections from './Sections';
+
+
+const history = createHistory();
 
 
 export default class ChildTabs extends BaseTabs {
@@ -15,11 +20,11 @@ export default class ChildTabs extends BaseTabs {
     }
     
     updateTabRoute (props) {
-        let {parentTabRoute, childTabRoute} = props.params;
+        let {parentTabRoute, childTabRoute} = props;
         let tabItems = getChildTabs(parentTabRoute);
 
         if (!childTabRoute) {
-            browserHistory.replace('/' + parentTabRoute + '/' + tabItems[0].route);
+            history.replace('/' + parentTabRoute + '/' + tabItems[0].route);
         }
     }
     
@@ -53,7 +58,7 @@ export default class ChildTabs extends BaseTabs {
     }
     
     render() {
-        let {parentTabRoute, childTabRoute} = this.props.params;
+        let {parentTabRoute, childTabRoute} = this.props;
         let tabs = getChildTabs(parentTabRoute);
         
         return (
@@ -63,7 +68,7 @@ export default class ChildTabs extends BaseTabs {
                 </ul>
                 <div className="tabs-content">
                     <div className="tabs-panel is-active">
-                        {this.props.children}
+                        <Sections parentTabRoute={parentTabRoute} childTabRoute={childTabRoute} location={this.props.location}/>
                     </div>
                 </div>
             </div>

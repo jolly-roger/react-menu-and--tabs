@@ -19,12 +19,14 @@
     "gulp-browserify": "^0.5.1",
     "gulp-clean": "^0.3.2",
     "gulp-sass": "^2.2.0",
+    "history": "^4.6.3",
     "jquery": "^2.2.2",
     "lorem-ipsum-react-native": "^1.0.3",
     "path": "^0.12.7",
-    "react": "^0.14.7",
-    "react-dom": "^0.14.7",
-    "react-router": "^2.0.1",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-router": "^4.1.1",
+    "react-router-dom": "^4.1.1",
     "redux": "^3.5.2"
   },
   "dependencies": {

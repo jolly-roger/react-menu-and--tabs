@@ -27,7 +27,7 @@ export default class Sections extends Component {
     }
     
     updateQuery(sectionId, isCollapse) {
-        let query = this.props.location.query;
+        let query = this.props.location.search;
         let collapse = [];
         
         if (query.collapse) {
@@ -70,7 +70,7 @@ export default class Sections extends Component {
     }
     
     componentWillReceiveProps(newProps) {
-        let query = newProps.location.query;
+        let query = newProps.location.search;
         let collapse = query.collapse ? JSON.parse(query.collapse) : [];
         
         if (collapse.length == 0) {
@@ -89,9 +89,14 @@ export default class Sections extends Component {
     }
     
     render() {
-        let {parentTabRoute, childTabRoute} = this.props.params;
+        let {parentTabRoute, childTabRoute} = this.props;
         let sections = getSections(parentTabRoute, childTabRoute);
-        let query = this.props.location.query;
+        
+        
+        console.log(1000, this.props);
+        
+        
+        let query = this.props.location.search;
         let collapse = query.collapse ? JSON.parse(query.collapse) : [];
         
         return (
