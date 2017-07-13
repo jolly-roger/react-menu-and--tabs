@@ -3,3 +3,6 @@
 
 .navigator .parent-tabs-panel {
   padding-right: 0px !important; }
+
+.navigator .section .inactive {
+  display: none; }

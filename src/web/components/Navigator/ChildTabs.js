@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import createHistory from 'history/createBrowserHistory';
 import {Link} from 'react-router-dom';
 
 import BaseTabs from './BaseTabs';
@@ -7,25 +6,11 @@ import {getChildTabs} from './store';
 import Sections from './Sections';
 
 
-const history = createHistory();
-
-
-export default class ChildTabs extends BaseTabs {
+export default class ChildTabs extends Component {
     constructor () {
         super();
         
-        this.tabsContainerId = 'childTabsContainer';
-        
-        this.binbedHandleTabClick = this.handleTabClick.bind(this);
-    }
-    
-    updateTabRoute (props) {
-        let {parentTabRoute, childTabRoute} = props;
-        let tabItems = getChildTabs(parentTabRoute);
-
-        if (!childTabRoute) {
-            history.replace('/' + parentTabRoute + '/' + tabItems[0].route);
-        }
+        //this.binbedHandleTabClick = this.handleTabClick.bind(this);
     }
     
     getTabsView(tabs, parentTabRoute, childTabRoute) {
@@ -42,19 +27,11 @@ export default class ChildTabs extends BaseTabs {
             }
 
             return (
-                <li className={'tabs-title ' + isActive}>
-                    <Link to={route} {...props}>{val.name}</Link>
+                <li className={'tabs-title ' + isActive} key={val.route}>
+                    <Link to={route}>{val.name}</Link>
                 </li>
             );
         });
-    }
-    
-    componentWillMount() {
-        this.updateTabRoute(this.props);
-    }
-    
-    componentWillReceiveProps(newProps) {
-        this.updateTabRoute(newProps);
     }
     
     render() {
@@ -62,8 +39,8 @@ export default class ChildTabs extends BaseTabs {
         let tabs = getChildTabs(parentTabRoute);
         
         return (
-            <div id={this.tabsContainerId}>
-                <ul className="tabs" onClick={this.binbedHandleTabClick}>
+            <div>
+                <ul className="tabs">
                     {this.getTabsView(tabs, parentTabRoute, childTabRoute)}
                 </ul>
                 <div className="tabs-content">

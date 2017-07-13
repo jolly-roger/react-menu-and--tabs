@@ -6,4 +6,10 @@
     .parent-tabs-panel {
         padding-right: 0px !important;
     }
+    
+    .section {
+        .inactive {
+           display: none; 
+        }
+    }
 }

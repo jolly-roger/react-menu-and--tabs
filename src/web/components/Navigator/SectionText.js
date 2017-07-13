@@ -11,7 +11,7 @@ export default class SectionText extends Component {
         this.childRoute = props.childRoute;
         this.sectionRoute = props.sectionRoute;
 
-        store.subscribe(() => {
+        this.unsubscribeStore = store.subscribe(() => {
             this.setState(findSection(this.parentRoute, this.childRoute, this.sectionRoute))
         });
     }
@@ -28,6 +28,10 @@ export default class SectionText extends Component {
             
             store.dispatch(loadSection(newProps.parentRoute, newProps.childRoute, newProps.sectionRoute));
         }
+    }
+    
+    componentWillUnmount() {
+        this.unsubscribeStore();
     }
     
     render() {

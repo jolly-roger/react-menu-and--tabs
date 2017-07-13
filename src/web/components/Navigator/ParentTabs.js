@@ -2,15 +2,15 @@ import React, {Component} from 'react';
 import {Route, Link} from 'react-router-dom';
 
 import BaseTabs from './BaseTabs';
-import {getParentTabs} from './store';
+import {getParentTabs, getChildTabs} from './store';
 import ChildTabs from './ChildTabs';
 
 
-export default class ParentTabs extends BaseTabs {
+export default class ParentTabs extends Component {
     constructor() {
         super();
         
-        this.binbedHandleTabClick = this.handleTabClick.bind(this);
+        //this.binbedHandleTabClick = this.handleTabClick.bind(this);
     }
     
     getTabsView(tabs, parentTabRoute) {
@@ -22,8 +22,8 @@ export default class ParentTabs extends BaseTabs {
             }
             
             return (
-                <li className="tabs-title">
-                    <Link to={"/" + val.route} {...props} >{val.name}</Link>
+                <li className="tabs-title" key={val.route}>
+                    <Link to={"/" + val.route} >{val.name}</Link>
                 </li>
             );
         });
@@ -31,18 +31,27 @@ export default class ParentTabs extends BaseTabs {
     
     render() {
         let {parentTabRoute, childTabRoute} = this.props.match.params;
-        let tabs = getParentTabs();
+        let parentTabs = getParentTabs();
+        
+        if (!parentTabRoute) {
+            parentTabRoute = (parentTabs.length > 0) ? parentTabs[0].route : null;
+        }
+        
+        if (parentTabRoute && !childTabRoute) {
+            let childTabs = getChildTabs(parentTabRoute);
+            
+            childTabRoute = (childTabs.length > 0) ? childTabs[0].route : null;
+        }
 
         return (
             <div className="row collapse navigator">
-                <div id={this.tabsContainerId} className="small-3 columns parent-tabs">
-                    <ul className="tabs vertical" onClick={this.binbedHandleTabClick}>
-                        {this.getTabsView(tabs, parentTabRoute)}
+                <div className="small-3 columns parent-tabs">
+                    <ul className="tabs vertical">
+                        {this.getTabsView(parentTabs, parentTabRoute)}
                     </ul>
                 </div>
                 <div className="columns">
                     <div className="tabs-panel is-active parent-tabs-panel">
-                        {/*this.props.children*/}
                         <ChildTabs parentTabRoute={parentTabRoute} childTabRoute={childTabRoute} location={this.props.location}/>
                     </div>
                 </div>
