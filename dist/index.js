@@ -84,77 +84,7 @@ exports.default = App;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var App = function (_Component) {
-    _inherits(App, _Component);
-
-    function App() {
-        _classCallCheck(this, App);
-
-        var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this));
-
-        _this.tabsContainerId = 'tabsContainer';
-        _this.ariaSelectedAttr = 'aria-selected';
-        _this.isActiveClass = 'is-active';
-        return _this;
-    }
-
-    _createClass(App, [{
-        key: 'handleTabClick',
-        value: function handleTabClick(event) {
-            var _this2 = this;
-
-            var ariaSelected = Boolean(event.target.getAttribute(this.ariaSelectedAttr));
-            var tabLinks = Array.from(document.querySelectorAll('#' + this.tabsContainerId + ' .tabs-title a'));
-
-            if (ariaSelected) {
-                return;
-            } else {
-                var tabs = Array.from(document.querySelectorAll('#' + this.tabItemsId + ' .tabs-title'));
-
-                tabLinks.forEach(function (el) {
-                    return el.removeAttribute(_this2.ariaSelectedAttr);
-                });
-                tabs.forEach(function (el) {
-                    return el.classList.remove(_this2.isActiveClass);
-                });
-
-                event.target.setAttribute(this.ariaSelectedAttr, true);
-                event.target.parentNode.classList.add(this.isActiveClass);
-            }
-
-            tabLinks.forEach(function (el) {
-                return el.blur();
-            });
-        }
-    }]);
-
-    return App;
-}(_react.Component);
-
-exports.default = App;
-},{"react":247}],3:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+exports.default = ChildTabs;
 
 var _react = require('react');
 
@@ -162,97 +92,42 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = require('react-router-dom');
 
-var _BaseTabs = require('./BaseTabs');
-
-var _BaseTabs2 = _interopRequireDefault(_BaseTabs);
-
 var _store = require('./store');
 
 var _Sections = require('./Sections');
 
 var _Sections2 = _interopRequireDefault(_Sections);
 
+var _TabLink = require('./TabLink');
+
+var _TabLink2 = _interopRequireDefault(_TabLink);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function ChildTabs(props) {
+    var parentTabRoute = props.parentTabRoute,
+        childTabRoute = props.childTabRoute;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+    var tabs = (0, _store.getChildTabs)(parentTabRoute);
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var ChildTabs = function (_Component) {
-    _inherits(ChildTabs, _Component);
-
-    function ChildTabs() {
-        _classCallCheck(this, ChildTabs);
-
-        return _possibleConstructorReturn(this, (ChildTabs.__proto__ || Object.getPrototypeOf(ChildTabs)).call(this));
-
-        //this.binbedHandleTabClick = this.handleTabClick.bind(this);
-    }
-
-    _createClass(ChildTabs, [{
-        key: 'getTabsView',
-        value: function getTabsView(tabs, parentTabRoute, childTabRoute) {
-            var _this2 = this;
-
-            return tabs.map(function (val, i) {
-                var props = {};
-                var route = '/' + parentTabRoute + '/' + val.route;
-                var isActive = _this2.isActiveClass;
-
-                if (childTabRoute && val.route == childTabRoute || !childTabRoute && i == 0) {
-                    props[_this2.ariaSelectedAttr] = true;
-                } else {
-                    isActive = '';
-                }
-
-                return _react2.default.createElement(
-                    'li',
-                    { className: 'tabs-title ' + isActive, key: val.route },
-                    _react2.default.createElement(
-                        _reactRouterDom.Link,
-                        { to: route },
-                        val.name
-                    )
-                );
-            });
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            var _props = this.props,
-                parentTabRoute = _props.parentTabRoute,
-                childTabRoute = _props.childTabRoute;
-
-            var tabs = (0, _store.getChildTabs)(parentTabRoute);
-
-            return _react2.default.createElement(
-                'div',
-                null,
-                _react2.default.createElement(
-                    'ul',
-                    { className: 'tabs' },
-                    this.getTabsView(tabs, parentTabRoute, childTabRoute)
-                ),
-                _react2.default.createElement(
-                    'div',
-                    { className: 'tabs-content' },
-                    _react2.default.createElement(
-                        'div',
-                        { className: 'tabs-panel is-active' },
-                        _react2.default.createElement(_Sections2.default, { parentTabRoute: parentTabRoute, childTabRoute: childTabRoute, location: this.props.location })
-                    )
-                )
-            );
-        }
-    }]);
-
-    return ChildTabs;
-}(_react.Component);
-
-exports.default = ChildTabs;
-},{"./BaseTabs":2,"./Sections":7,"./store":11,"react":247,"react-router-dom":208}],4:[function(require,module,exports){
+    return _react2.default.createElement(
+        'div',
+        { className: 'tabs' },
+        _react2.default.createElement(
+            'ul',
+            { className: 'child-tabs' },
+            tabs.map(function (val) {
+                return _react2.default.createElement(_TabLink2.default, { link: val, currentRoute: childTabRoute, parentTabRoute: parentTabRoute, key: val.route });
+            })
+        ),
+        _react2.default.createElement(
+            'div',
+            { className: 'child-tab-content' },
+            _react2.default.createElement(_Sections2.default, { parentTabRoute: parentTabRoute, childTabRoute: childTabRoute, location: props.location })
+        )
+    );
+}
+},{"./Sections":6,"./TabLink":7,"./store":11,"react":247,"react-router-dom":208}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -303,24 +178,17 @@ var Navigator = function (_Component) {
 }(_react.Component);
 
 exports.default = Navigator;
-},{"./ParentTabs":5,"react":247,"react-router-dom":208}],5:[function(require,module,exports){
+},{"./ParentTabs":4,"react":247,"react-router-dom":208}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+exports.default = ParentTabs;
 
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
-
-var _reactRouterDom = require('react-router-dom');
-
-var _BaseTabs = require('./BaseTabs');
-
-var _BaseTabs2 = _interopRequireDefault(_BaseTabs);
 
 var _store = require('./store');
 
@@ -328,97 +196,62 @@ var _ChildTabs = require('./ChildTabs');
 
 var _ChildTabs2 = _interopRequireDefault(_ChildTabs);
 
+var _TabLink = require('./TabLink');
+
+var _TabLink2 = _interopRequireDefault(_TabLink);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function ParentTabs(props) {
+    var _props$match$params = props.match.params,
+        parentTabRoute = _props$match$params.parentTabRoute,
+        childTabRoute = _props$match$params.childTabRoute;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+    var parentTabs = (0, _store.getParentTabs)();
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var ParentTabs = function (_Component) {
-    _inherits(ParentTabs, _Component);
-
-    function ParentTabs() {
-        _classCallCheck(this, ParentTabs);
-
-        return _possibleConstructorReturn(this, (ParentTabs.__proto__ || Object.getPrototypeOf(ParentTabs)).call(this));
-
-        //this.binbedHandleTabClick = this.handleTabClick.bind(this);
+    if (!parentTabRoute) {
+        parentTabRoute = parentTabs.length > 0 ? parentTabs[0].route : null;
     }
 
-    _createClass(ParentTabs, [{
-        key: 'getTabsView',
-        value: function getTabsView(tabs, parentTabRoute) {
-            var _this2 = this;
+    if (parentTabRoute && !childTabRoute) {
+        var childTabs = (0, _store.getChildTabs)(parentTabRoute);
 
-            return tabs.map(function (val, i) {
-                var props = {};
+        childTabRoute = childTabs.length > 0 ? childTabs[0].route : null;
+    }
 
-                if (parentTabRoute && val.route == parentTabRoute) {
-                    props[_this2.ariaSelectedAttr] = true;
-                }
+    return _react2.default.createElement(
+        'div',
+        { className: 'navigator' },
+        _react2.default.createElement(
+            'div',
+            { className: 'tabs parent-tabs' },
+            _react2.default.createElement(
+                'ul',
+                null,
+                parentTabs.map(function (val) {
+                    var localChildTabs = (0, _store.getChildTabs)(val.route);
+                    var localChildTabRoute = childTabRoute;
 
-                return _react2.default.createElement(
-                    'li',
-                    { className: 'tabs-title', key: val.route },
-                    _react2.default.createElement(
-                        _reactRouterDom.Link,
-                        { to: "/" + val.route },
-                        val.name
-                    )
-                );
-            });
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            var _props$match$params = this.props.match.params,
-                parentTabRoute = _props$match$params.parentTabRoute,
-                childTabRoute = _props$match$params.childTabRoute;
+                    if (localChildTabs.indexOf(childTabRoute) < 0) {
+                        localChildTabRoute = localChildTabs[0].route;
+                    }
 
-            var parentTabs = (0, _store.getParentTabs)();
-
-            if (!parentTabRoute) {
-                parentTabRoute = parentTabs.length > 0 ? parentTabs[0].route : null;
-            }
-
-            if (parentTabRoute && !childTabRoute) {
-                var childTabs = (0, _store.getChildTabs)(parentTabRoute);
-
-                childTabRoute = childTabs.length > 0 ? childTabs[0].route : null;
-            }
-
-            return _react2.default.createElement(
+                    return _react2.default.createElement(_TabLink2.default, { link: val, currentRoute: parentTabRoute, childTabRoute: localChildTabRoute, key: val.route });
+                })
+            )
+        ),
+        _react2.default.createElement(
+            'div',
+            { className: 'columns' },
+            _react2.default.createElement(
                 'div',
-                { className: 'row collapse navigator' },
-                _react2.default.createElement(
-                    'div',
-                    { className: 'small-3 columns parent-tabs' },
-                    _react2.default.createElement(
-                        'ul',
-                        { className: 'tabs vertical' },
-                        this.getTabsView(parentTabs, parentTabRoute)
-                    )
-                ),
-                _react2.default.createElement(
-                    'div',
-                    { className: 'columns' },
-                    _react2.default.createElement(
-                        'div',
-                        { className: 'tabs-panel is-active parent-tabs-panel' },
-                        _react2.default.createElement(_ChildTabs2.default, { parentTabRoute: parentTabRoute, childTabRoute: childTabRoute, location: this.props.location })
-                    )
-                )
-            );
-        }
-    }]);
-
-    return ParentTabs;
-}(_react.Component);
-
-exports.default = ParentTabs;
-},{"./BaseTabs":2,"./ChildTabs":3,"./store":11,"react":247,"react-router-dom":208}],6:[function(require,module,exports){
+                { className: 'tabs-panel is-active parent-tabs-panel' },
+                _react2.default.createElement(_ChildTabs2.default, { parentTabRoute: parentTabRoute, childTabRoute: childTabRoute, location: props.location })
+            )
+        )
+    );
+}
+},{"./ChildTabs":2,"./TabLink":7,"./store":11,"react":247}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -499,14 +332,13 @@ var SectionText = function (_Component) {
 }(_react.Component);
 
 exports.default = SectionText;
-},{"./store":11,"react":247}],7:[function(require,module,exports){
+},{"./store":11,"react":247}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+exports.default = Sections;
 
 var _react = require('react');
 
@@ -528,36 +360,27 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function Sections(props) {
+    var parentTabRoute = props.parentTabRoute,
+        childTabRoute = props.childTabRoute;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+    var sections = (0, _store.getSections)(parentTabRoute, childTabRoute);
+    var query = _queryString2.default.parse(props.location.search);
+    var collapse = query.collapse ? JSON.parse(query.collapse) : [];
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Sections = function (_Component) {
-    _inherits(Sections, _Component);
-
-    function Sections(props) {
-        _classCallCheck(this, Sections);
-
-        var _this = _possibleConstructorReturn(this, (Sections.__proto__ || Object.getPrototypeOf(Sections)).call(this, props));
-
-        _this.isInactiveClass = 'inactive';
-        return _this;
-    }
-
-    _createClass(Sections, [{
-        key: 'getSectionsView',
-        value: function getSectionsView(sections, collapse, parentTabRoute, childTabRoute) {
-            var _this2 = this;
-
-            return sections.map(function (val, i) {
+    return _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(
+            'ul',
+            null,
+            sections.map(function (val, i) {
                 var isInactive = '';
                 var sectionCollapse = [].concat(_toConsumableArray(collapse));
                 var indexOfSection = collapse.indexOf(val.route);
 
-                if (indexOfSection > -1) {
-                    isInactive = _this2.isInactiveClass;
+                if (indexOfSection >= 0) {
+                    isInactive = 'inactive';
                     sectionCollapse.splice(indexOfSection, 1);
                 } else {
                     sectionCollapse.push(val.route);
@@ -568,7 +391,7 @@ var Sections = function (_Component) {
                     { className: 'section', key: val.route },
                     _react2.default.createElement(
                         _reactRouterDom.Link,
-                        { to: { pathname: _this2.props.location.pathname, search: 'collapse=' + JSON.stringify(sectionCollapse) } },
+                        { to: { pathname: props.location.pathname, search: 'collapse=' + JSON.stringify(sectionCollapse) } },
                         val.name
                     ),
                     _react2.default.createElement(
@@ -577,36 +400,51 @@ var Sections = function (_Component) {
                         _react2.default.createElement(_SectionText2.default, { parentRoute: parentTabRoute, childRoute: childTabRoute, sectionRoute: val.route })
                     )
                 );
-            });
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            var _props = this.props,
-                parentTabRoute = _props.parentTabRoute,
-                childTabRoute = _props.childTabRoute;
+            })
+        )
+    );
+}
+},{"./SectionText":5,"./store":11,"query-string":69,"react":247,"react-router-dom":208}],7:[function(require,module,exports){
+'use strict';
 
-            var sections = (0, _store.getSections)(parentTabRoute, childTabRoute);
-            var query = _queryString2.default.parse(this.props.location.search);
-            var collapse = query.collapse ? JSON.parse(query.collapse) : [];
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = TabLink;
 
-            return _react2.default.createElement(
-                'div',
-                null,
-                _react2.default.createElement(
-                    'ul',
-                    null,
-                    this.getSectionsView(sections, collapse, parentTabRoute, childTabRoute)
-                )
-            );
-        }
-    }]);
+var _react = require('react');
 
-    return Sections;
-}(_react.Component);
+var _react2 = _interopRequireDefault(_react);
 
-exports.default = Sections;
-},{"./SectionText":6,"./store":11,"query-string":69,"react":247,"react-router-dom":208}],8:[function(require,module,exports){
+var _reactRouterDom = require('react-router-dom');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function TabLink(props) {
+    var route = "/" + props.link.route;
+    var isActive = '';
+
+    if (props.parentTabRoute) {
+        route = '/' + props.parentTabRoute + '/' + props.link.route;
+    } else if (props.childTabRoute) {
+        route = '/' + props.link.route + '/' + props.childTabRoute;
+    }
+
+    if (props.currentRoute && props.currentRoute == props.link.route) {
+        isActive = 'active';
+    }
+
+    return _react2.default.createElement(
+        'li',
+        { className: isActive },
+        _react2.default.createElement(
+            _reactRouterDom.Link,
+            { to: route },
+            props.link.name
+        )
+    );
+}
+},{"react":247,"react-router-dom":208}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -636,7 +474,7 @@ var _Navigator2 = _interopRequireDefault(_Navigator);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = _Navigator2.default;
-},{"./Navigator":4,"./store":11}],9:[function(require,module,exports){
+},{"./Navigator":3,"./store":11}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

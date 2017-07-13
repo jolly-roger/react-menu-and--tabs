@@ -1,10 +1,32 @@
 .navigator {
-    .parent-tabs {
-        padding-top: 16px;
+    display: flex;
+    flex-direction: row;
+    
+    .tabs {
+        ul {
+            padding-left: 0em;
+            list-style-type: none;
+            
+            il {
+            }
+            
+            .active {
+                background-color: yellow;
+            }
+        }
     }
     
-    .parent-tabs-panel {
-        padding-right: 0px !important;
+    .tab {
+        
+    }
+    
+    .parent-tabs {
+        width: 10em;
+    }
+    
+    .child-tabs {
+        display: flex;
+        flex-direction: row;
     }
     
     .section {

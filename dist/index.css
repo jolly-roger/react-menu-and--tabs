@@ -1,8 +1,15 @@
-.navigator .parent-tabs {
-  padding-top: 16px; }
-
-.navigator .parent-tabs-panel {
-  padding-right: 0px !important; }
-
-.navigator .section .inactive {
-  display: none; }
+.navigator {
+  display: flex;
+  flex-direction: row; }
+  .navigator .tabs ul {
+    padding-left: 0em;
+    list-style-type: none; }
+    .navigator .tabs ul .active {
+      background-color: yellow; }
+  .navigator .parent-tabs {
+    width: 10em; }
+  .navigator .child-tabs {
+    display: flex;
+    flex-direction: row; }
+  .navigator .section .inactive {
+    display: none; }

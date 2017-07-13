@@ -1,61 +1,47 @@
 import React, {Component} from 'react';
-import {Route, Link} from 'react-router-dom';
 
-import BaseTabs from './BaseTabs';
 import {getParentTabs, getChildTabs} from './store';
 import ChildTabs from './ChildTabs';
+import TabLink from './TabLink';
 
 
-export default class ParentTabs extends Component {
-    constructor() {
-        super();
-        
-        //this.binbedHandleTabClick = this.handleTabClick.bind(this);
+export default function ParentTabs (props) {
+    let {parentTabRoute, childTabRoute} = props.match.params;
+    let parentTabs = getParentTabs();
+    
+    if (!parentTabRoute) {
+        parentTabRoute = (parentTabs.length > 0) ? parentTabs[0].route : null;
     }
     
-    getTabsView(tabs, parentTabRoute) {
-        return tabs.map((val, i) => {
-            let props = {};
-            
-            if (parentTabRoute && val.route == parentTabRoute) {
-                props[this.ariaSelectedAttr] = true;
-            }
-            
-            return (
-                <li className="tabs-title" key={val.route}>
-                    <Link to={"/" + val.route} >{val.name}</Link>
-                </li>
-            );
-        });
+    if (parentTabRoute && !childTabRoute) {
+        let childTabs = getChildTabs(parentTabRoute);
+        
+        childTabRoute = (childTabs.length > 0) ? childTabs[0].route : null;
     }
-    
-    render() {
-        let {parentTabRoute, childTabRoute} = this.props.match.params;
-        let parentTabs = getParentTabs();
-        
-        if (!parentTabRoute) {
-            parentTabRoute = (parentTabs.length > 0) ? parentTabs[0].route : null;
-        }
-        
-        if (parentTabRoute && !childTabRoute) {
-            let childTabs = getChildTabs(parentTabRoute);
-            
-            childTabRoute = (childTabs.length > 0) ? childTabs[0].route : null;
-        }
 
-        return (
-            <div className="row collapse navigator">
-                <div className="small-3 columns parent-tabs">
-                    <ul className="tabs vertical">
-                        {this.getTabsView(parentTabs, parentTabRoute)}
-                    </ul>
-                </div>
-                <div className="columns">
-                    <div className="tabs-panel is-active parent-tabs-panel">
-                        <ChildTabs parentTabRoute={parentTabRoute} childTabRoute={childTabRoute} location={this.props.location}/>
-                    </div>
+    return (
+        <div className="navigator">
+            <div className="tabs parent-tabs">
+                <ul>
+                    {parentTabs.map((val) => {
+                        let localChildTabs = getChildTabs(val.route);
+                        let localChildTabRoute = childTabRoute;
+                        
+                        if (localChildTabs.indexOf(childTabRoute) < 0) {
+                            localChildTabRoute = localChildTabs[0].route;
+                        }
+                        
+                        return (
+                          <TabLink link={val} currentRoute={parentTabRoute} childTabRoute={localChildTabRoute} key={val.route} />
+                        );
+                    })}
+                </ul>
+            </div>
+            <div className="columns">
+                <div className="tabs-panel is-active parent-tabs-panel">
+                    <ChildTabs parentTabRoute={parentTabRoute} childTabRoute={childTabRoute} location={props.location}/>
                 </div>
             </div>
-        );
-    }
+        </div>
+    );
 }
