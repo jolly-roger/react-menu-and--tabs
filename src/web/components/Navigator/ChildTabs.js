@@ -1,14 +1,15 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 
-import {getChildTabs} from './store';
+import {Filter} from './store';
 import Sections from './Sections';
 import TabLink from './TabLink';
 
 
 export default function ChildTabs(props) {
+    let filter = new Filter();
     let {parentTabRoute, childTabRoute} = props;
-    let tabs = getChildTabs(parentTabRoute);
+    let tabs = filter.getChildTabs(parentTabRoute);
     
     return (
         <div className="tabs">

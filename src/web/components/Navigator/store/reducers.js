@@ -1,6 +1,6 @@
 import loremIpsum from 'lorem-ipsum-react-native';
 
-import {findSection} from './filters';
+import {Filter} from './filter';
 
 
 export default function navigator (state, action) {
@@ -9,11 +9,14 @@ export default function navigator (state, action) {
             return action.navigation;
         case 'LOAD_SECTION':
             let newState = Object.assign({}, state);
-            let section = findSection(action.parentRoute, action.childRoute, action.sectionRoute);
-        
+            let filter = new Filter(newState);
+            let section = filter.findSection(action.parentRoute, action.childRoute, action.sectionRoute);
+            
             !section.text && (section.text = loremIpsum({
                     units: 'paragraphs'
                 }));
+            
+            action.isInactive && (section.isInactive = action.isInactive);
             
             return newState;
         default:

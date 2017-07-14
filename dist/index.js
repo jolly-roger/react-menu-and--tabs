@@ -105,10 +105,11 @@ var _TabLink2 = _interopRequireDefault(_TabLink);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ChildTabs(props) {
+    var filter = new _store.Filter();
     var parentTabRoute = props.parentTabRoute,
         childTabRoute = props.childTabRoute;
 
-    var tabs = (0, _store.getChildTabs)(parentTabRoute);
+    var tabs = filter.getChildTabs(parentTabRoute);
 
     return _react2.default.createElement(
         'div',
@@ -203,18 +204,19 @@ var _TabLink2 = _interopRequireDefault(_TabLink);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ParentTabs(props) {
+    var filter = new _store.Filter();
     var _props$match$params = props.match.params,
         parentTabRoute = _props$match$params.parentTabRoute,
         childTabRoute = _props$match$params.childTabRoute;
 
-    var parentTabs = (0, _store.getParentTabs)();
+    var parentTabs = filter.getParentTabs();
 
     if (!parentTabRoute) {
         parentTabRoute = parentTabs.length > 0 ? parentTabs[0].route : null;
     }
 
     if (parentTabRoute && !childTabRoute) {
-        var childTabs = (0, _store.getChildTabs)(parentTabRoute);
+        var childTabs = filter.getChildTabs(parentTabRoute);
 
         childTabRoute = childTabs.length > 0 ? childTabs[0].route : null;
     }
@@ -229,7 +231,7 @@ function ParentTabs(props) {
                 'ul',
                 null,
                 parentTabs.map(function (val) {
-                    var localChildTabs = (0, _store.getChildTabs)(val.route);
+                    var localChildTabs = filter.getChildTabs(val.route);
                     var localChildTabRoute = childTabRoute;
 
                     if (localChildTabs.indexOf(childTabRoute) < 0) {
@@ -264,6 +266,12 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRouterDom = require('react-router-dom');
+
+var _queryString = require('query-string');
+
+var _queryString2 = _interopRequireDefault(_queryString);
+
 var _store = require('./store');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -284,10 +292,14 @@ var SectionText = function (_Component) {
 
         _this.parentRoute = props.parentRoute;
         _this.childRoute = props.childRoute;
-        _this.sectionRoute = props.sectionRoute;
+        _this.sectionRoute = props.section.route;
+        _this.location = props.location;
 
         _this.unsubscribeStore = _store.store.subscribe(function () {
-            _this.setState((0, _store.findSection)(_this.parentRoute, _this.childRoute, _this.sectionRoute));
+            var filter = new _store.Filter();
+            var state = filter.findSection(_this.parentRoute, _this.childRoute, _this.sectionRoute);
+
+            _this.setState(state);
         });
         return _this;
     }
@@ -300,12 +312,13 @@ var SectionText = function (_Component) {
     }, {
         key: 'componentWillReceiveProps',
         value: function componentWillReceiveProps(newProps) {
-            if (this.parentRoute !== newProps.parentRoute || this.childRoute !== newProps.childRoute || this.sectionRoute !== newProps.sectionRoute) {
+            if (this.parentRoute !== newProps.parentRoute || this.childRoute !== newProps.childRoute || this.sectionRoute !== newProps.section.route || this.location != newProps.location) {
                 this.parentRoute = newProps.parentRoute;
                 this.childRoute = newProps.childRoute;
-                this.sectionRoute = newProps.sectionRoute;
+                this.sectionRoute = newProps.section.route;
+                this.location = newProps.location;
 
-                _store.store.dispatch((0, _store.loadSection)(newProps.parentRoute, newProps.childRoute, newProps.sectionRoute));
+                _store.store.dispatch((0, _store.loadSection)(this.parentRoute, this.childRoute, this.sectionRoute, this.getInactivity()));
             }
         }
     }, {
@@ -314,16 +327,54 @@ var SectionText = function (_Component) {
             this.unsubscribeStore();
         }
     }, {
+        key: 'getInactivity',
+        value: function getInactivity() {
+            var query = _queryString2.default.parse(this.location.search);
+            var collapse = query.collapse ? JSON.parse(query.collapse) : [];
+            var isInactive = false;
+            var indexOfSection = collapse.indexOf(this.sectionRoute);
+
+            if (indexOfSection >= 0) {
+                isInactive = true;
+            }
+
+            return isInactive;
+        }
+    }, {
         key: 'render',
         value: function render() {
+            var query = _queryString2.default.parse(this.location.search);
+            var collapse = query.collapse ? JSON.parse(query.collapse) : [];
             var fullRoute = this.parentRoute + '/' + this.childRoute + '/' + this.sectionRoute;
+            var isInactive = '';
+            var indexOfSection = collapse.indexOf(this.sectionRoute);
+
+            if (!this.location.search && this.state.isInactive) {
+                isInactive = 'inactive';
+            } else {
+                if (this.getInactivity()) {
+                    isInactive = 'inactive';
+                    collapse.splice(indexOfSection, 1);
+                } else {
+                    collapse.push(this.sectionRoute);
+                }
+            }
 
             return _react2.default.createElement(
                 'div',
                 null,
-                fullRoute,
-                _react2.default.createElement('br', null),
-                this.state.text
+                _react2.default.createElement(
+                    _reactRouterDom.Link,
+                    { to: { pathname: this.props.location.pathname, search: 'collapse=' + JSON.stringify(collapse) } },
+                    this.props.section.name
+                ),
+                _react2.default.createElement(
+                    'div',
+                    { className: isInactive },
+                    fullRoute,
+                    _react2.default.createElement('br', null),
+                    this.state.text
+                )
             );
         }
     }]);
@@ -332,7 +383,7 @@ var SectionText = function (_Component) {
 }(_react.Component);
 
 exports.default = SectionText;
-},{"./store":11,"react":247}],6:[function(require,module,exports){
+},{"./store":11,"query-string":69,"react":247,"react-router-dom":208}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -344,29 +395,20 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactRouterDom = require('react-router-dom');
+var _Section = require('./Section');
 
-var _queryString = require('query-string');
-
-var _queryString2 = _interopRequireDefault(_queryString);
-
-var _SectionText = require('./SectionText');
-
-var _SectionText2 = _interopRequireDefault(_SectionText);
+var _Section2 = _interopRequireDefault(_Section);
 
 var _store = require('./store');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
 function Sections(props) {
+    var filter = new _store.Filter();
     var parentTabRoute = props.parentTabRoute,
         childTabRoute = props.childTabRoute;
 
-    var sections = (0, _store.getSections)(parentTabRoute, childTabRoute);
-    var query = _queryString2.default.parse(props.location.search);
-    var collapse = query.collapse ? JSON.parse(query.collapse) : [];
+    var sections = filter.getSections(parentTabRoute, childTabRoute);
 
     return _react2.default.createElement(
         'div',
@@ -375,36 +417,16 @@ function Sections(props) {
             'ul',
             null,
             sections.map(function (val, i) {
-                var isInactive = '';
-                var sectionCollapse = [].concat(_toConsumableArray(collapse));
-                var indexOfSection = collapse.indexOf(val.route);
-
-                if (indexOfSection >= 0) {
-                    isInactive = 'inactive';
-                    sectionCollapse.splice(indexOfSection, 1);
-                } else {
-                    sectionCollapse.push(val.route);
-                }
-
                 return _react2.default.createElement(
                     'li',
                     { className: 'section', key: val.route },
-                    _react2.default.createElement(
-                        _reactRouterDom.Link,
-                        { to: { pathname: props.location.pathname, search: 'collapse=' + JSON.stringify(sectionCollapse) } },
-                        val.name
-                    ),
-                    _react2.default.createElement(
-                        'div',
-                        { className: isInactive },
-                        _react2.default.createElement(_SectionText2.default, { parentRoute: parentTabRoute, childRoute: childTabRoute, sectionRoute: val.route })
-                    )
+                    _react2.default.createElement(_Section2.default, { parentRoute: parentTabRoute, childRoute: childTabRoute, section: val, location: props.location })
                 );
             })
         )
     );
 }
-},{"./SectionText":5,"./store":11,"query-string":69,"react":247,"react-router-dom":208}],7:[function(require,module,exports){
+},{"./Section":5,"./store":11,"react":247}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -492,12 +514,13 @@ function loadNavigation(navigation) {
     };
 }
 
-function loadSection(parentRoute, childRoute, sectionRoute) {
+function loadSection(parentRoute, childRoute, sectionRoute, isInactive) {
     return {
         type: LOAD_SECTION,
         parentRoute: parentRoute,
         childRoute: childRoute,
-        sectionRoute: sectionRoute
+        sectionRoute: sectionRoute,
+        isInactive: isInactive
     };
 }
 },{}],10:[function(require,module,exports){
@@ -506,7 +529,9 @@ function loadSection(parentRoute, childRoute, sectionRoute) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.findSection = exports.findChildTab = exports.findParentTab = exports.getSections = exports.getChildTabs = exports.getParentTabs = exports.store = undefined;
+exports.Filter = exports.store = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _redux = require('redux');
 
@@ -516,55 +541,75 @@ var _reducers2 = _interopRequireDefault(_reducers);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 var store = (0, _redux.createStore)(_reducers2.default);
 
-function getStateArray() {
-    var state = store.getState();
+var Filter = function () {
+    function Filter(state) {
+        _classCallCheck(this, Filter);
 
-    return Object.keys(state).map(function (key) {
-        return state[key];
-    });
-}
+        this.state = store.getState();
 
-function getParentTabs() {
-    return getStateArray();
-}
+        if (state) {
+            this.state = state;
+        }
+    }
 
-function getChildTabs(parentTabRoute) {
-    return findParentTab(parentTabRoute).tabs;
-}
+    _createClass(Filter, [{
+        key: 'getStateArray',
+        value: function getStateArray() {
+            var _this = this;
 
-function getSections(parentTabRoute, childTabRoute) {
-    return findChildTab(parentTabRoute, childTabRoute).sections;
-}
+            return Object.keys(this.state).map(function (key) {
+                return _this.state[key];
+            });
+        }
+    }, {
+        key: 'getParentTabs',
+        value: function getParentTabs() {
+            return this.getStateArray();
+        }
+    }, {
+        key: 'getChildTabs',
+        value: function getChildTabs(parentTabRoute) {
+            return this.findParentTab(parentTabRoute).tabs;
+        }
+    }, {
+        key: 'getSections',
+        value: function getSections(parentTabRoute, childTabRoute) {
+            return this.findChildTab(parentTabRoute, childTabRoute).sections;
+        }
+    }, {
+        key: 'findParentTab',
+        value: function findParentTab(parentTabRoute) {
+            return this.getStateArray().find(function (tab) {
+                return tab.route === parentTabRoute;
+            });
+        }
+    }, {
+        key: 'findChildTab',
+        value: function findChildTab(parentTabRoute, childTabRoute) {
+            var parentTab = this.findParentTab(parentTabRoute);
 
-function findParentTab(parentTabRoute) {
-    return getStateArray().find(function (tab) {
-        return tab.route === parentTabRoute;
-    });
-}
+            return parentTab.tabs.find(function (tab) {
+                return tab.route === childTabRoute;
+            });
+        }
+    }, {
+        key: 'findSection',
+        value: function findSection(parentTabRoute, childTabRoute, sectionRoute) {
+            return this.getSections(parentTabRoute, childTabRoute).find(function (section) {
+                return section.route === sectionRoute;
+            });
+        }
+    }]);
 
-function findChildTab(parentTabRoute, childTabRoute) {
-    var parentTab = findParentTab(parentTabRoute);
-
-    return parentTab.tabs.find(function (tab) {
-        return tab.route === childTabRoute;
-    });
-}
-
-function findSection(parentTabRoute, childTabRoute, sectionRoute) {
-    return getSections(parentTabRoute, childTabRoute).find(function (section) {
-        return section.route === sectionRoute;
-    });
-}
+    return Filter;
+}();
 
 exports.store = store;
-exports.getParentTabs = getParentTabs;
-exports.getChildTabs = getChildTabs;
-exports.getSections = getSections;
-exports.findParentTab = findParentTab;
-exports.findChildTab = findChildTab;
-exports.findSection = findSection;
+exports.Filter = Filter;
 },{"./reducers":12,"redux":253}],11:[function(require,module,exports){
 'use strict';
 
@@ -587,39 +632,21 @@ Object.defineProperty(exports, 'loadNavigation', {
   }
 });
 
-var _filters = require('./filters');
+var _filter = require('./filter');
 
 Object.defineProperty(exports, 'store', {
   enumerable: true,
   get: function get() {
-    return _filters.store;
+    return _filter.store;
   }
 });
-Object.defineProperty(exports, 'findSection', {
+Object.defineProperty(exports, 'Filter', {
   enumerable: true,
   get: function get() {
-    return _filters.findSection;
+    return _filter.Filter;
   }
 });
-Object.defineProperty(exports, 'getSections', {
-  enumerable: true,
-  get: function get() {
-    return _filters.getSections;
-  }
-});
-Object.defineProperty(exports, 'getParentTabs', {
-  enumerable: true,
-  get: function get() {
-    return _filters.getParentTabs;
-  }
-});
-Object.defineProperty(exports, 'getChildTabs', {
-  enumerable: true,
-  get: function get() {
-    return _filters.getChildTabs;
-  }
-});
-},{"./actions":9,"./filters":10}],12:[function(require,module,exports){
+},{"./actions":9,"./filter":10}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -631,7 +658,7 @@ var _loremIpsumReactNative = require('lorem-ipsum-react-native');
 
 var _loremIpsumReactNative2 = _interopRequireDefault(_loremIpsumReactNative);
 
-var _filters = require('./filters');
+var _filter = require('./filter');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -641,18 +668,21 @@ function navigator(state, action) {
             return action.navigation;
         case 'LOAD_SECTION':
             var newState = Object.assign({}, state);
-            var section = (0, _filters.findSection)(action.parentRoute, action.childRoute, action.sectionRoute);
+            var filter = new _filter.Filter(newState);
+            var section = filter.findSection(action.parentRoute, action.childRoute, action.sectionRoute);
 
             !section.text && (section.text = (0, _loremIpsumReactNative2.default)({
                 units: 'paragraphs'
             }));
+
+            action.isInactive && (section.isInactive = action.isInactive);
 
             return newState;
         default:
             return state;
     }
 }
-},{"./filters":10,"lorem-ipsum-react-native":61}],13:[function(require,module,exports){
+},{"./filter":10,"lorem-ipsum-react-native":61}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

@@ -1,20 +1,21 @@
 import React, {Component} from 'react';
 
-import {getParentTabs, getChildTabs} from './store';
+import {Filter} from './store';
 import ChildTabs from './ChildTabs';
 import TabLink from './TabLink';
 
 
 export default function ParentTabs (props) {
+    let filter = new Filter();
     let {parentTabRoute, childTabRoute} = props.match.params;
-    let parentTabs = getParentTabs();
+    let parentTabs = filter.getParentTabs();
     
     if (!parentTabRoute) {
         parentTabRoute = (parentTabs.length > 0) ? parentTabs[0].route : null;
     }
     
     if (parentTabRoute && !childTabRoute) {
-        let childTabs = getChildTabs(parentTabRoute);
+        let childTabs = filter.getChildTabs(parentTabRoute);
         
         childTabRoute = (childTabs.length > 0) ? childTabs[0].route : null;
     }
@@ -24,7 +25,7 @@ export default function ParentTabs (props) {
             <div className="tabs parent-tabs">
                 <ul>
                     {parentTabs.map((val) => {
-                        let localChildTabs = getChildTabs(val.route);
+                        let localChildTabs = filter.getChildTabs(val.route);
                         let localChildTabRoute = childTabRoute;
                         
                         if (localChildTabs.indexOf(childTabRoute) < 0) {

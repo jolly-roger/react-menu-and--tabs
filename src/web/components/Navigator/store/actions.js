@@ -9,11 +9,12 @@ export function loadNavigation (navigation) {
     };
 }
 
-export function loadSection (parentRoute, childRoute, sectionRoute) {
+export function loadSection (parentRoute, childRoute, sectionRoute, isInactive) {
     return {
         type: LOAD_SECTION,
         parentRoute: parentRoute,
         childRoute: childRoute,
-        sectionRoute: sectionRoute
+        sectionRoute: sectionRoute,
+        isInactive: isInactive
     };
 }
