@@ -16,7 +16,9 @@ export default function navigator (state, action) {
                     units: 'paragraphs'
                 }));
             
-            action.isInactive && (section.isInactive = action.isInactive);
+            if (typeof action.isInactive !== 'undefined') {
+                section.isInactive = action.isInactive;
+            }
             
             return newState;
         default:

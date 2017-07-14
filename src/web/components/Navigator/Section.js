@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import queryString from 'query-string';
 
 import {store, loadSection, Filter} from './store';
 
@@ -12,7 +11,7 @@ export default class SectionText extends Component {
         this.parentRoute = props.parentRoute;
         this.childRoute = props.childRoute;
         this.sectionRoute = props.section.route;
-        this.location = props.location;
+        this.collapse = props.collapse;
 
         this.unsubscribeStore = store.subscribe(() => {
             let filter = new Filter();            
@@ -28,11 +27,11 @@ export default class SectionText extends Component {
     
     componentWillReceiveProps(newProps) {
         if (this.parentRoute !== newProps.parentRoute || this.childRoute !== newProps.childRoute || this.sectionRoute !== newProps.section.route ||
-            this.location != newProps.location) {
+            this.collapse != newProps.collapse) {
             this.parentRoute = newProps.parentRoute;
             this.childRoute = newProps.childRoute;
             this.sectionRoute = newProps.section.route;
-            this.location = newProps.location;
+            this.collapse = newProps.collapse;
             
             store.dispatch(loadSection(this.parentRoute, this.childRoute, this.sectionRoute, this.getInactivity()));
         }
@@ -43,10 +42,8 @@ export default class SectionText extends Component {
     }
     
     getInactivity () {
-        let query = queryString.parse(this.location.search);
-        let collapse = query.collapse ? JSON.parse(query.collapse) : [];
         let isInactive = false;
-        let indexOfSection = collapse.indexOf(this.sectionRoute);
+        let indexOfSection = this.collapse.indexOf(this.sectionRoute);
         
         if (indexOfSection >= 0) {
             isInactive = true;
@@ -56,26 +53,21 @@ export default class SectionText extends Component {
     }
     
     render() {
-        let query = queryString.parse(this.location.search);
-        let collapse = query.collapse ? JSON.parse(query.collapse) : [];
         let fullRoute = `${this.parentRoute}/${this.childRoute}/${this.sectionRoute}`;
         let isInactive = '';
-        let indexOfSection = collapse.indexOf(this.sectionRoute);
+        let sectionCollapse = [...this.collapse];
+        let indexOfSection = sectionCollapse.indexOf(this.sectionRoute);
         
-        if (!this.location.search && this.state.isInactive) {
+        if ((!this.props.location.search && this.state.isInactive) || this.getInactivity()) {
             isInactive = 'inactive';
+            sectionCollapse.splice(indexOfSection, 1);
         } else {
-            if (this.getInactivity()) {
-                isInactive = 'inactive';
-                collapse.splice(indexOfSection, 1);
-            } else {
-                collapse.push(this.sectionRoute);
-            }
+            sectionCollapse.push(this.sectionRoute);
         }
         
         return (
             <div>
-                <Link to={{pathname: this.props.location.pathname, search: 'collapse=' + JSON.stringify(collapse)}}>{this.props.section.name}</Link>
+                <Link to={{pathname: this.props.location.pathname, search: 'collapse=' + JSON.stringify(sectionCollapse)}}>{this.props.section.name}</Link>
                 <div className={isInactive}>
                     {fullRoute}
                     <br />

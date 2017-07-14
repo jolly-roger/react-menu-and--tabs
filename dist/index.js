@@ -268,13 +268,11 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = require('react-router-dom');
 
-var _queryString = require('query-string');
-
-var _queryString2 = _interopRequireDefault(_queryString);
-
 var _store = require('./store');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -293,7 +291,7 @@ var SectionText = function (_Component) {
         _this.parentRoute = props.parentRoute;
         _this.childRoute = props.childRoute;
         _this.sectionRoute = props.section.route;
-        _this.location = props.location;
+        _this.collapse = props.collapse;
 
         _this.unsubscribeStore = _store.store.subscribe(function () {
             var filter = new _store.Filter();
@@ -312,11 +310,11 @@ var SectionText = function (_Component) {
     }, {
         key: 'componentWillReceiveProps',
         value: function componentWillReceiveProps(newProps) {
-            if (this.parentRoute !== newProps.parentRoute || this.childRoute !== newProps.childRoute || this.sectionRoute !== newProps.section.route || this.location != newProps.location) {
+            if (this.parentRoute !== newProps.parentRoute || this.childRoute !== newProps.childRoute || this.sectionRoute !== newProps.section.route || this.collapse != newProps.collapse) {
                 this.parentRoute = newProps.parentRoute;
                 this.childRoute = newProps.childRoute;
                 this.sectionRoute = newProps.section.route;
-                this.location = newProps.location;
+                this.collapse = newProps.collapse;
 
                 _store.store.dispatch((0, _store.loadSection)(this.parentRoute, this.childRoute, this.sectionRoute, this.getInactivity()));
             }
@@ -329,10 +327,8 @@ var SectionText = function (_Component) {
     }, {
         key: 'getInactivity',
         value: function getInactivity() {
-            var query = _queryString2.default.parse(this.location.search);
-            var collapse = query.collapse ? JSON.parse(query.collapse) : [];
             var isInactive = false;
-            var indexOfSection = collapse.indexOf(this.sectionRoute);
+            var indexOfSection = this.collapse.indexOf(this.sectionRoute);
 
             if (indexOfSection >= 0) {
                 isInactive = true;
@@ -343,21 +339,16 @@ var SectionText = function (_Component) {
     }, {
         key: 'render',
         value: function render() {
-            var query = _queryString2.default.parse(this.location.search);
-            var collapse = query.collapse ? JSON.parse(query.collapse) : [];
             var fullRoute = this.parentRoute + '/' + this.childRoute + '/' + this.sectionRoute;
             var isInactive = '';
-            var indexOfSection = collapse.indexOf(this.sectionRoute);
+            var sectionCollapse = [].concat(_toConsumableArray(this.collapse));
+            var indexOfSection = sectionCollapse.indexOf(this.sectionRoute);
 
-            if (!this.location.search && this.state.isInactive) {
+            if (!this.props.location.search && this.state.isInactive || this.getInactivity()) {
                 isInactive = 'inactive';
+                sectionCollapse.splice(indexOfSection, 1);
             } else {
-                if (this.getInactivity()) {
-                    isInactive = 'inactive';
-                    collapse.splice(indexOfSection, 1);
-                } else {
-                    collapse.push(this.sectionRoute);
-                }
+                sectionCollapse.push(this.sectionRoute);
             }
 
             return _react2.default.createElement(
@@ -365,7 +356,7 @@ var SectionText = function (_Component) {
                 null,
                 _react2.default.createElement(
                     _reactRouterDom.Link,
-                    { to: { pathname: this.props.location.pathname, search: 'collapse=' + JSON.stringify(collapse) } },
+                    { to: { pathname: this.props.location.pathname, search: 'collapse=' + JSON.stringify(sectionCollapse) } },
                     this.props.section.name
                 ),
                 _react2.default.createElement(
@@ -383,7 +374,7 @@ var SectionText = function (_Component) {
 }(_react.Component);
 
 exports.default = SectionText;
-},{"./store":11,"query-string":69,"react":247,"react-router-dom":208}],6:[function(require,module,exports){
+},{"./store":11,"react":247,"react-router-dom":208}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -394,6 +385,10 @@ exports.default = Sections;
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _queryString = require('query-string');
+
+var _queryString2 = _interopRequireDefault(_queryString);
 
 var _Section = require('./Section');
 
@@ -409,6 +404,18 @@ function Sections(props) {
         childTabRoute = props.childTabRoute;
 
     var sections = filter.getSections(parentTabRoute, childTabRoute);
+    var query = _queryString2.default.parse(props.location.search);
+    var collapse = query.collapse ? JSON.parse(query.collapse) : [];
+
+    if (!props.location.search) {
+        collapse = sections.reduce(function (res, section) {
+            if (section.isInactive) {
+                res.push(section.route);
+            }
+
+            return res;
+        }, []);
+    }
 
     return _react2.default.createElement(
         'div',
@@ -420,13 +427,13 @@ function Sections(props) {
                 return _react2.default.createElement(
                     'li',
                     { className: 'section', key: val.route },
-                    _react2.default.createElement(_Section2.default, { parentRoute: parentTabRoute, childRoute: childTabRoute, section: val, location: props.location })
+                    _react2.default.createElement(_Section2.default, { parentRoute: parentTabRoute, childRoute: childTabRoute, section: val, collapse: collapse, location: props.location })
                 );
             })
         )
     );
 }
-},{"./Section":5,"./store":11,"react":247}],7:[function(require,module,exports){
+},{"./Section":5,"./store":11,"query-string":69,"react":247}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -675,7 +682,9 @@ function navigator(state, action) {
                 units: 'paragraphs'
             }));
 
-            action.isInactive && (section.isInactive = action.isInactive);
+            if (typeof action.isInactive !== 'undefined') {
+                section.isInactive = action.isInactive;
+            }
 
             return newState;
         default:
