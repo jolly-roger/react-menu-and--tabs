@@ -6,9 +6,4 @@ gulp.task('html', () => {
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('copy-build', ['browserify'], () => {
-    return gulp.src(['_build/web/*', '!_build/web/es5'])
-        .pipe(gulp.dest('dist'));
-});
-
-gulp.task('copy', ['copy-build', 'html', 'sass']);
+gulp.task('copy', ['html', 'rollup', 'sass']);

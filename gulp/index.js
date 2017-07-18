@@ -1,5 +1,3 @@
-require('./clear');
 require('./copy');
-require('./babel');
-require('./browserify');
+require('./rollup');
 require('./sass');

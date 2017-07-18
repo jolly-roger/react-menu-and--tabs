@@ -9,4 +9,4 @@ require('./gulp');
 //    gulp.watch('');
 //});
 
-gulp.task('default', ['clear']);
+gulp.task('default', ['copy']);
