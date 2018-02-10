@@ -5,16 +5,29 @@ const babel =require('rollup-plugin-babel');
 const commonjs =require('rollup-plugin-commonjs');
 const resolve = require('rollup-plugin-node-resolve');
 const replace = require('rollup-plugin-replace');
-const sass = require('rollup-plugin-sass');
+const postcss = require('rollup-plugin-postcss');
 const uglify = require('rollup-plugin-uglify');
+const postcssModules = require('postcss-modules');
+
+
+const cssExportMap = {};
 
 gulp.task('rollup', () => {
     return rollup({
         entry: 'src/web/index.js',
         format: 'iife',
         plugins: [
-            sass({
-                insert: true
+            postcss({
+                plugins: [
+                    postcssModules({
+                        getJSON (id, exportTokens) {
+                          cssExportMap[id] = exportTokens;
+                        }
+                    })
+                ],
+                getExport (id) {
+                    return cssExportMap[id];
+                }
             }),
             babel({
                 presets: ['react', 'es2015-rollup'],
@@ -36,7 +49,7 @@ gulp.task('rollup', () => {
                     'node_modules/react/react.js': ['Component']
                 }
             }),
-            //uglify()
+            uglify()
         ]
     })
     .then(bundle => {

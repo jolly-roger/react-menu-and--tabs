@@ -3,6 +3,8 @@ import {Link} from 'react-router-dom';
 
 import {store, loadSection, Filter} from './store';
 
+import style from './Section.css';
+
 
 export default class SectionText extends Component {
     constructor (props) {
@@ -59,7 +61,7 @@ export default class SectionText extends Component {
         let indexOfSection = sectionCollapse.indexOf(this.sectionRoute);
         
         if ((!this.props.location.search && this.state.isInactive) || this.getInactivity()) {
-            isInactive = 'inactive';
+            isInactive = style.inactive;
             sectionCollapse.splice(indexOfSection, 1);
         } else {
             sectionCollapse.push(this.sectionRoute);

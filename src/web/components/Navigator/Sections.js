@@ -27,7 +27,7 @@ export default function Sections(props) {
             <ul>
                 {sections.map((val, i) => {
                     return (
-                        <li className="section" key={val.route}>
+                        <li key={val.route}>
                             <Section parentRoute={parentTabRoute} childRoute={childTabRoute} section={val} collapse={collapse} location={props.location}/>
                         </li>
                     );

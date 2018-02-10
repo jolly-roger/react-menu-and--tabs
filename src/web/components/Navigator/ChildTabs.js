@@ -5,6 +5,8 @@ import {Filter} from './store';
 import Sections from './Sections';
 import TabLink from './TabLink';
 
+import style from './Tabs.css';
+
 
 export default function ChildTabs(props) {
     let filter = new Filter();
@@ -12,15 +14,15 @@ export default function ChildTabs(props) {
     let tabs = filter.getChildTabs(parentTabRoute);
     
     return (
-        <div className="tabs">
-            <ul className="child-tabs">
+        <div className={style.tabs}>
+            <ul className={style.child_tabs}>
                 {tabs.map((val) => {
                     return (
                       <TabLink link={val} currentRoute={childTabRoute} parentTabRoute={parentTabRoute} key={val.route} />
                     );
                 })}
             </ul>
-            <div className="child-tab-content">
+            <div>
                 <Sections parentTabRoute={parentTabRoute} childTabRoute={childTabRoute} location={props.location}/>
             </div>
         </div>

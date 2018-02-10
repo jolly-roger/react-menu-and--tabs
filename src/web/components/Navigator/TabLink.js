@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 
+import style from './TabLink.css';
 
 export default function TabLink(props) {
     let route = "/" + props.link.route;
@@ -13,7 +14,7 @@ export default function TabLink(props) {
     }
 
     if (props.currentRoute && props.currentRoute == props.link.route) {
-        isActive = 'active';
+        isActive = style.active;
     }
     
     return (

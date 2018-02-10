@@ -4,6 +4,9 @@ import {Filter} from './store';
 import ChildTabs from './ChildTabs';
 import TabLink from './TabLink';
 
+import style from './Tabs.css';
+import {navigator as navigatorClass} from './Navigator.css';
+
 
 export default function ParentTabs (props) {
     let filter = new Filter();
@@ -21,8 +24,8 @@ export default function ParentTabs (props) {
     }
 
     return (
-        <div className="navigator">
-            <div className="tabs parent-tabs">
+        <div className={navigatorClass}>
+            <div className={style.tabs + ' ' +  style.parent_tabs}>
                 <ul>
                     {parentTabs.map((val) => {
                         let localChildTabs = filter.getChildTabs(val.route);
@@ -38,8 +41,8 @@ export default function ParentTabs (props) {
                     })}
                 </ul>
             </div>
-            <div className="columns">
-                <div className="tabs-panel is-active parent-tabs-panel">
+            <div className={style.columns}>
+                <div>
                     <ChildTabs parentTabRoute={parentTabRoute} childTabRoute={childTabRoute} location={props.location}/>
                 </div>
             </div>

@@ -21,13 +21,13 @@ module.exports = {
                 },
             }],
         }, {
-            test: /\.scss$/,
+            test: /\.css$/,
             use: [{
                 loader: 'style-loader'
             }, {
-                loader: 'css-loader'
+                loader: 'css-loader?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]' 
             }, {
-                loader: 'sass-loader'
+                loader: 'postcss-loader'
             }]
         } 
     ]

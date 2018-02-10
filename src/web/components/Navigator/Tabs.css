@@ -1,0 +1,15 @@
+.tabs {}
+
+.tabs ul {
+    padding-left: 0em;
+    list-style-type: none;
+}
+
+.parent_tabs {
+    width: 10em;
+}
+
+.child_tabs {
+    display: flex;
+    flex-direction: row;
+}
