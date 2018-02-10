@@ -1,14 +1,15 @@
-import React, {Component} from 'react';
-import {BrowserRouter, Route, Link, Redirect} from 'react-router-dom'
+import React from 'react';
+import { BrowserRouter, Route } from 'react-router-dom';
 
 import ParentTabs from './ParentTabs';
 
-export default class Navigator extends Component {    
-    render() {
-      return (
-          <BrowserRouter>
-            <Route path={'/:parentTabRoute?/:childTabRoute?'} component={ParentTabs} />
-          </BrowserRouter>
-      );
-    }
+export default function Navigator() {
+  return (
+    <BrowserRouter>
+      <Route
+        path="/:parentTabRoute?/:childTabRoute?"
+        component={ParentTabs}
+      />
+    </BrowserRouter>
+  );
 }

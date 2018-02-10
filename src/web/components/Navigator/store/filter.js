@@ -1,4 +1,4 @@
-import {createStore} from 'redux';
+import { createStore } from 'redux';
 
 import reducers from './reducers';
 
@@ -7,44 +7,44 @@ const store = createStore(reducers);
 
 
 class Filter {
-    constructor(state) {
-        this.state = store.getState();
-        
-        if (state) {
-            this.state = state;
-        }
-    }
-    
-    getStateArray() {
-        return Object.keys(this.state).map( key => this.state[key]);
-    }
+  constructor(state) {
+    this.state = store.getState();
 
-    getParentTabs() {
-        return this.getStateArray();
+    if (state) {
+      this.state = state;
     }
+  }
 
-    getChildTabs(parentTabRoute) {
-        return this.findParentTab(parentTabRoute).tabs;
-    }
+  getStateArray() {
+    return Object.keys(this.state).map(key => this.state[key]);
+  }
 
-    getSections(parentTabRoute, childTabRoute) {
-        return this.findChildTab(parentTabRoute, childTabRoute).sections;
-    }
+  getParentTabs() {
+    return this.getStateArray();
+  }
 
-    findParentTab(parentTabRoute) {
-        return this.getStateArray().find((tab) => tab.route === parentTabRoute);
-    }
+  getChildTabs(parentTabRoute) {
+    return this.findParentTab(parentTabRoute).tabs;
+  }
 
-    findChildTab(parentTabRoute, childTabRoute) {
-        let parentTab = this.findParentTab(parentTabRoute);
-        
-        return parentTab.tabs.find((tab) => tab.route === childTabRoute);
-    }
+  getSections(parentTabRoute, childTabRoute) {
+    return this.findChildTab(parentTabRoute, childTabRoute).sections;
+  }
 
-    findSection(parentTabRoute, childTabRoute, sectionRoute) {
-        return this.getSections(parentTabRoute, childTabRoute)
-            .find((section) => section.route === sectionRoute);
-    }
+  findParentTab(parentTabRoute) {
+    return this.getStateArray().find(tab => tab.route === parentTabRoute);
+  }
+
+  findChildTab(parentTabRoute, childTabRoute) {
+    const parentTab = this.findParentTab(parentTabRoute);
+
+    return parentTab.tabs.find(tab => tab.route === childTabRoute);
+  }
+
+  findSection(parentTabRoute, childTabRoute, sectionRoute) {
+    return this.getSections(parentTabRoute, childTabRoute)
+      .find(section => section.route === sectionRoute);
+  }
 }
 
-export {store, Filter};
+export { store, Filter };

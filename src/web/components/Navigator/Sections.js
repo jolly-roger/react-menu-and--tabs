@@ -1,38 +1,53 @@
-import React, {Component} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import queryString from 'query-string';
 
 import Section from './Section';
-import {Filter} from './store';
+import { Filter } from './store';
 
 
 export default function Sections(props) {
-    let filter = new Filter();
-    let {parentTabRoute, childTabRoute} = props;
-    let sections = filter.getSections(parentTabRoute, childTabRoute);
-    let query = queryString.parse(props.location.search);
-    let collapse = query.collapse ? JSON.parse(query.collapse) : [];
-    
-    if (!props.location.search) {
-        collapse = sections.reduce((res, section) => {
-            if (section.isInactive) {
-                res.push(section.route);
-            }
-            
-            return res;
-        }, []);
-    }
+  const filter = new Filter();
+  const {
+    parentTabRoute,
+    childTabRoute,
+    location,
+  } = props;
+  const sections = filter.getSections(parentTabRoute, childTabRoute);
+  const query = queryString.parse(location.search);
+  let collapse = query.collapse ? JSON.parse(query.collapse) : [];
 
-    return (
-        <div>
-            <ul>
-                {sections.map((val, i) => {
-                    return (
-                        <li key={val.route}>
-                            <Section parentRoute={parentTabRoute} childRoute={childTabRoute} section={val} collapse={collapse} location={props.location}/>
-                        </li>
-                    );
-                })}
-            </ul>
-        </div>
-    );
+  if (!location.search) {
+    collapse = sections.reduce((res, section) => {
+      if (section.isInactive) {
+        res.push(section.route);
+      }
+
+      return res;
+    }, []);
+  }
+
+  return (
+    <div>
+      <ul>
+        {sections.map(val => (
+          <li key={val.route}>
+            <Section
+              parentRoute={parentTabRoute}
+              childRoute={childTabRoute}
+              section={val}
+              collapse={collapse}
+              location={location}
+            />
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
+
+Sections.propTypes = {
+  parentTabRoute: PropTypes.string,
+  childTabRoute: PropTypes.string,
+  location: PropTypes.object,
+};

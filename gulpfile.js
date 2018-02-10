@@ -1,5 +1,6 @@
 const gulp = require('gulp');
 const file = require('gulp-file');
+const eslint = require('gulp-eslint');
 const rollup = require('rollup').rollup;
 const babel =require('rollup-plugin-babel');
 const commonjs =require('rollup-plugin-commonjs');
@@ -49,7 +50,7 @@ gulp.task('rollup', () => {
                     'node_modules/react/react.js': ['Component']
                 }
             }),
-            uglify()
+            //uglify()
         ]
     })
     .then(bundle => {
@@ -72,3 +73,10 @@ gulp.task('html', () => {
 gulp.task('copy', ['html', 'rollup']);
 
 gulp.task('default', ['copy']);
+
+gulp.task('lint', () => {
+	return gulp.src('src/**/*.js')
+		.pipe(eslint())
+		.pipe(eslint.format())
+		.pipe(eslint.failAfterError());
+});

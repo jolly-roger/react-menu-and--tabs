@@ -1,0 +1,2 @@
+export const LOAD_NAVIGATION = 'LOAD_NAVIGATION';
+export const LOAD_SECTION = 'LOAD_SECTION';

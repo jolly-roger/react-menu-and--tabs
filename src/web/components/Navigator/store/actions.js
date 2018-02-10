@@ -1,20 +1,18 @@
-export const LOAD_SECTION = 'LOAD_SECTION';
-export const LOAD_NAVIGATION = 'LOAD_NAVIGATION';
+import { LOAD_NAVIGATION, LOAD_SECTION } from './constants';
 
-
-export function loadNavigation (navigation) {
-    return {
-        type: LOAD_NAVIGATION,
-        navigation: navigation
-    };
+export function loadNavigation(navigation) {
+  return {
+    type: LOAD_NAVIGATION,
+    navigation,
+  };
 }
 
-export function loadSection (parentRoute, childRoute, sectionRoute, isInactive) {
-    return {
-        type: LOAD_SECTION,
-        parentRoute: parentRoute,
-        childRoute: childRoute,
-        sectionRoute: sectionRoute,
-        isInactive: isInactive
-    };
+export function loadSection(parentRoute, childRoute, sectionRoute, isInactive) {
+  return {
+    type: LOAD_SECTION,
+    parentRoute,
+    childRoute,
+    sectionRoute,
+    isInactive,
+  };
 }
